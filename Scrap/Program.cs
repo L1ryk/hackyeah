@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Scrap.Scrappers;
 using WebAPI.DataSource;
-
-using WebAPI.DataSource;
 using WebAPI.DataSource.Entities.Locations;
-using WebAPI.DataSource.Entities.System;
 using WebAPI.DataSource.Entities.Univerisites;
 
 var dbConnectionString = Environment.GetEnvironmentVariable( "DbConnection" );
@@ -17,6 +14,10 @@ var options = dbConfigurationBuilder.Options;
 var db = new ApiDbContext( options );
 
 db.Database.Migrate();
+
+var jsonPath = "C:\\Users\\Liryk\\AppData\\Roaming\\JetBrains\\Rider2023.2\\scratches\\scratch_4.json";
+var oi = new OccupationImporter( jsonPath );
+await oi.Import( db );
 
 var http = new HttpClient();
 

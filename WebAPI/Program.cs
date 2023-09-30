@@ -38,6 +38,7 @@ builder.Services.AddScoped<IUniversityAccessor, UniversityAccessor>();
 builder.Services.AddScoped<ICourseAccessor, CourseAccessor>();
 builder.Services.AddScoped<IUniversityCourseAccessor, UniversityCourseAccessor>();
 builder.Services.AddScoped<ITagAccessor, TagAccessor>();
+builder.Services.AddScoped<IOccupationAccessor, OccupationAccessor>();
 
 var app = builder.Build();
 
