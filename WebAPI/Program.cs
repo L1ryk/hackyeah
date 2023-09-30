@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using WebAPI.DataSource;
+using WebAPI.DataSource.Accessors.Interfaces;
 using WebAPI.DataSource.Accessors.LocationAccessors;
 using WebAPI.DataSource.Accessors.UniversityAccessors;
 
