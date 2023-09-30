@@ -58,6 +58,20 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environment/environment.ts",
+                  "with": "src/environment/environment.local.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -70,6 +84,9 @@
             },
             "development": {
               "browserTarget": "Panel:build:development"
+            },
+            "local": {
+              "browserTarget": "Panel:build:local"
             }
           },
           "defaultConfiguration": "development"
