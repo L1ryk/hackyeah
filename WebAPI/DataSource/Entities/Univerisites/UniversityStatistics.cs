@@ -7,7 +7,7 @@ public class UniversityStatistics
     [Key]
     public Guid Id { get; set; }
     
-    public UniversityDetails Details { get; set; }
+    public University University { get; set; }
     
     public string Year { get; set; }
 

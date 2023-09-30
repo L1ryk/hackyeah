@@ -34,8 +34,8 @@ public class UniversityController : ControllerBase
         {
             Id = u.Id,
             Name = u.Name,
-            City = u.Details.City,
-            Voivodeship = u.Details.Voivodeship
+            City = u.City,
+            Voivodeship = u.Voivodeship
         } );
 
         return Ok( new Response<PaginatedResult<UniversityResponse>>
@@ -48,16 +48,16 @@ public class UniversityController : ControllerBase
         } );
     }
 
-    [ HttpGet( "details" ) ]
-    public async Task<IActionResult> Get( [ FromQuery ] Guid universityId )
-    {
-        var details = await _dbContext.UniversitiesDetails
-            .FirstAsync( d => d.Id == universityId );
-        
-        return Ok(new Response<UniversityDetails>
-        {
-            IsSuccess = true,
-            Result = details
-        });
-    }
+    // [ HttpGet( "details" ) ]
+    // public async Task<IActionResult> Get( [ FromQuery ] Guid universityId )
+    // {
+    //     var details = await _dbContext.UniversitiesDetails
+    //         .FirstAsync( d => d.Id == universityId );
+    //     
+    //     return Ok(new Response<UniversityDetails>
+    //     {
+    //         IsSuccess = true,
+    //         Result = details
+    //     });
+    // }
 }
