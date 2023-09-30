@@ -14,7 +14,8 @@ export class ApiService {
 
   constructor(
     private http: HttpClient
-  ) {}
+  ) {
+  }
 
   get$<T>(fn: string, data: { [index: string]: any } = {}): Observable<T> {
     const state = new Subject<T>()
@@ -66,6 +67,7 @@ export class ApiService {
   post$<T>(fn: string, data: any): Observable<T> {
     const state = new Subject<T>()
     let headers = new HttpHeaders()
+    headers = headers.append('Content-Type', 'application/json')
 
     // if (enforceJson) {
     //   headers = headers.append('Content-Type', 'application/json')
