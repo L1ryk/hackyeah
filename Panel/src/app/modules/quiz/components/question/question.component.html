@@ -1,0 +1,14 @@
+<div
+  class="container"
+  [formGroup]="form"
+  (keyup.enter)="onSubmitQuestion()"
+>
+  <h2>{{ questions[currentIndex].text }}</h2>
+  <mat-form-field>
+    <mat-label>Answer</mat-label>
+    <input
+      matInput
+      formControlName="answer"
+    >
+  </mat-form-field>
+</div>

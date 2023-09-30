@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="quiz-box">
+    <ng-container *ngIf="!isStarted">
+      <h2>Welcome! I'll help you find perfect university for you!</h2>
+      <h3>But first let me ask you some questions</h3>
+      <button
+        mat-button
+        (click)="isStarted = true"
+      >
+        Start
+        <mat-icon fontIcon="arrow_right_alt"></mat-icon>
+      </button>
+    </ng-container>
+
+    <app-question *ngIf="isStarted"></app-question>
+  </div>
+</div>
