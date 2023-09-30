@@ -30,11 +30,8 @@ public class CityAccessor : ICityAccessor
 
         var query = _dbContext.Cities.Where( c => c.Voivodeship.Id == getCities.VoivodeshipId );
 
-        var itemsCount = await query.CountAsync();
+        var res = await query.GetPaginatedQuery( getCities, _dbContext );
 
-        var cities = await query.Skip( ( getCities.Page - 1 ) * getCities.Limit ).Take( getCities.Limit )
-            .ToListAsync();
-
-        return new GetAllCitiesResponse { Items = cities, ItemCount = itemsCount };
+        return new GetAllCitiesResponse { Items = res.Result, ItemCount = res.ItemsCount };
     }
 }

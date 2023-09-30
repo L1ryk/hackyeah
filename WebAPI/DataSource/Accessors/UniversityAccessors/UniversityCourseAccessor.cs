@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebAPI.DataSource.Accessors.Interfaces;
+using WebAPI.DataSource.Entities.Univerisites;
 using WebAPI.Helpers;
 using WebAPI.Models.Paginations;
 using WebAPI.Models.Responses.Courses;
@@ -19,14 +20,9 @@ public class UniversityCourseAccessor : IUniversityCourseAccessor
 
     public async Task<GetAllUniversityCoursesResponse> GetAllUniversityCoursesAsync( Pagination pagination )
     {
-        var query = _dbContext.UniversityCourses;
+        var res = await QueryHelper.GetPaginatedQuery<UniversityCourse>( pagination, _dbContext );
 
-        var itemsCount = await query.CountAsync();
-
-        var universityCourses = await query.Skip( ( pagination.Page - 1 ) * pagination.Limit ).Take( pagination.Limit )
-            .ToListAsync();
-
-        return new GetAllUniversityCoursesResponse { Items = universityCourses, ItemCount = itemsCount };
+        return new GetAllUniversityCoursesResponse { Items = res.Result, ItemCount = res.ItemsCount };
     }
 
     public async Task<GetAllUniversityCoursesResponse> GetUniversityCoursesAsync( GetUniversityCourses getUniversityCourses )
