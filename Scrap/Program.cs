@@ -1,9 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Scrap.Scrappers;
 using WebAPI.DataSource;
 
-var db = new ApiDbContext( new DbContextOptions< ApiDbContext >() );
+var dbConnectionString = Environment.GetEnvironmentVariable( "DbConnection" );
+var dbConfigurationBuilder = new DbContextOptionsBuilder< ApiDbContext >();
+dbConfigurationBuilder.UseNpgsql( dbConnectionString,
+                                  optionsBuilder =>
+                                      optionsBuilder.MigrationsAssembly( typeof( ApiDbContext ).Assembly.FullName ) );
+var options = dbConfigurationBuilder.Options;
+var db = new ApiDbContext( options );
 
 var http = new HttpClient();
 
@@ -16,7 +21,7 @@ if ( universityList == null )
 foreach ( var universityId in universityList )
 {
     Console.WriteLine( universityId.ToString() );
-Console.Write( await sf.GetUniversityDetails( universityId )
-               );
+    Console.Write( await sf.GetUniversityDetails( universityId )
+    );
     return;
 }
