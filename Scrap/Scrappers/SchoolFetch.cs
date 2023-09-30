@@ -7,10 +7,14 @@ namespace Scrap.Scrappers;
 public class SchoolFetch
 {
     private readonly HttpClient client;
-    private const    string     urlSearch = "https://aplikacje.edukacja.gov.pl/api/education-unit-search/school";
+    private const    string urlSearch = "https://aplikacje.edukacja.gov.pl/api/education-unit-search/school";
+    private const    string urlSchoolDetails = "https://aplikacje.edukacja.gov.pl/api/education-unit-search/school/{0}";
 
+    private const string urlUniversityList =
+        "https://aplikacje.edukacja.gov.pl/api/internal-data-hub/public/opi/university/dictionary/university";
 
-    private const string urlSchoolDetails = "https://aplikacje.edukacja.gov.pl/api/education-unit-search/school/{0}";
+    private const string urlUniversityDetails =
+        "https://aplikacje.edukacja.gov.pl/api/internal-data-hub/public/opi/university/{0}";
 
     public SchoolFetch( HttpClient client )
     {
@@ -39,4 +43,23 @@ public class SchoolFetch
         using var response = await client.SendAsync( new HttpRequestMessage( HttpMethod.Get, url ) );
         return JsonConvert.DeserializeObject< SchoolInfo >( await response.Content.ReadAsStringAsync() );
     }
+
+    public async Task< Guid[]? > GetUniversityList()
+    {
+        var response = await client.GetStringAsync( urlUniversityList );
+
+        return JsonConvert.DeserializeObject< UniversityList >( response )?.Entries.Select( e => e.Id ).ToArray();
+    }
+
+    public async Task< University? > GetUniversityDetails( Guid id )
+    {
+        var url = string.Format( urlUniversityDetails, id.ToString() );
+        Console.WriteLine( url );
+
+        var response = await client.GetStringAsync( url );
+        Console.Write( response );
+
+        return JsonConvert.DeserializeObject< University >( response );
+    }
 }
+

@@ -7,23 +7,16 @@ var db = new ApiDbContext( new DbContextOptions< ApiDbContext >() );
 
 var http = new HttpClient();
 
-/*var sf = new SchoolFetch( http );
+var sf = new SchoolFetch( http );
 
-var ids = await sf.GetListOfSchoolIds();
-if ( ids == null )
+var universityList = await sf.GetUniversityList();
+if ( universityList == null )
     return;
 
-foreach ( var schoolId in ids )
+foreach ( var universityId in universityList )
 {
-    var school = await sf.GetSchoolDetails( schoolId );
-    Console.WriteLine( JsonConvert.SerializeObject( school ) );
+    Console.WriteLine( universityId.ToString() );
+Console.Write( await sf.GetUniversityDetails( universityId )
+               );
     return;
-}*/
-
-var locationFetch = new LocationFetch( http );
-var voivodeships = await locationFetch.GetVoivodeships();
-
-foreach ( var x in voivodeships )
-{
-    Console.WriteLine( x );
 }

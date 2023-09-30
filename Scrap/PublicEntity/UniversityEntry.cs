@@ -2,14 +2,12 @@
 
 namespace Scrap.PublicEntity;
 
-public class Voivodeship
+public class UniversityEntry
 {
     [ JsonProperty( PropertyName = "id" ) ]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
+
 
     [ JsonProperty( PropertyName = "name" ) ]
     public string Name { get; set; }
-
-    [ JsonProperty( PropertyName = "levelName" ) ]
-    public string LevelName { get; set; }
 }
