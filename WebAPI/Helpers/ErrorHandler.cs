@@ -4,7 +4,7 @@ using WebAPI.Models.Responses;
 
 namespace WebAPI.Helpers;
 
-public class ErrorHandler
+public static class ErrorHandler
 {
     private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
     public static async Task< ActionResult > HandlerAsync( Func< Task< ActionResult > > caller )
