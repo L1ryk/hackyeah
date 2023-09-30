@@ -71,27 +71,52 @@ foreach ( var universityId in universityList )
         await db.SaveChangesAsync();
     }
 
-    await db.Universities.AddAsync( new University
+    var record = new University
     {
-        Name = university.Name,
+        Name = university.Name ?? string.Empty,
         City = city,
         Voivodeship = voivodeship,
-        Brand = university.Brand,
+        Brand = university.Brand ?? string.Empty,
         Country = country,
-        Email = university.Email,
-        Regon = university.Regon,
-        Status = university.Status,
-        Street = university.Street,
-        JudgeRegisterId = university.JudgeId,
-        ApartmentNumber = university.ApartmentNumber,
-        TaxId = university.TaxId,
-        Type = university.Type,
-        Website = university.Website,
-        CreatedAt = university.CreatedAt,
-        BuildingNumber = university.BuildingNumber,
-        PostCode = university.PostalCode,
-        RecruitmentLink = university.RecruitmentLink,
-        Id = university.Id
-    } );
+        Email = university.Email ?? string.Empty,
+        Regon = university.Regon ?? string.Empty,
+        Status = university.Status ?? string.Empty,
+        Street = university.Street ?? string.Empty,
+        JudgeRegisterId = university.JudgeId ?? String.Empty,
+        ApartmentNumber = university.ApartmentNumber ?? String.Empty,
+        TaxId = university.TaxId ?? string.Empty,
+        Type = university.Type ?? string.Empty,
+        Website = university.Website ?? string.Empty,
+        CreatedAt = university.CreatedAt.ToUniversalTime(),
+        BuildingNumber = university.BuildingNumber ?? string.Empty,
+        PostCode = university.PostalCode ?? string.Empty,
+        RecruitmentLink = university.RecruitmentLink ?? string.Empty,
+        Id = university.Id,
+        SupervisoryAuthority = university.Supervisor ?? string.Empty,
+        Epuap = string.Empty,
+        Phone = String.Empty,
+        IconId = string.Empty,
+        PdfLink = string.Empty,
+        PersonManaging = string.Empty,
+        TercCity = string.Empty,
+        TercDistrict = string.Empty,
+        TercVoivodeship = string.Empty,
+        AvailabilityFormUrl = string.Empty,
+        RecruitmentPageUrl = string.Empty,
+        PromotionalFilmUrl = string.Empty,
+    };
+    await db.Universities.AddAsync( record );
+    foreach ( var stat in university.Statistics )
+    {
+        await db.UniversityStatistics.AddAsync(new UniversityStatistics
+        {
+            University = record,
+            Year = stat.Year,
+            NumberCourse = stat.NumberCourse,
+            NumberEmployees = stat.NumberEmployees,
+            NumberStudents = stat.NumberStudents
+        });
+    }
+    // create stats
     await db.SaveChangesAsync();
 }
