@@ -24,9 +24,9 @@ public class TagImporter
             try
             {
                 var fixedLine = line.TrimEnd( ',' );
-                var courseName = fixedLine[ ..line.IndexOf( '[' ) ].Trim();
+                var courseName = fixedLine[ ..( line.IndexOf( '[' ) - 2 ) ].Trim();
                 var tags = JsonConvert.DeserializeObject< string[] >( fixedLine[ fixedLine.IndexOf( '[' ).. ] );
-                var course = await db.Courses.FirstOrDefaultAsync( c => c.Name == courseName );
+                var course = await db.Courses.FirstOrDefaultAsync( c => c.Name.ToLower() == courseName.ToLower() );
                 if ( course == null )
                     throw new Exception( $"Course {courseName} not found" );
 
@@ -42,7 +42,7 @@ public class TagImporter
                         await db.Tags.AddAsync( tag );
                     }
 
-                    if ( await db.CourseTags.AnyAsync( ct => ct.Tag == tag && ct.Course == course ) )
+                    if ( !await db.CourseTags.AnyAsync( ct => ct.Tag == tag && ct.Course == course ) )
                     {
                         await db.CourseTags.AddAsync( new CourseTag
                         {
@@ -50,9 +50,12 @@ public class TagImporter
                         } );
                     }
                 }
+
+                await db.SaveChangesAsync();
             }
-            catch
+            catch ( Exception e )
             {
+                Console.WriteLine( e.Message );
                 Console.WriteLine( $"ERROR: {line}" );
             }
         }
