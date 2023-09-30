@@ -17,7 +17,7 @@
       "applicationUrl": "http://localhost:5211",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DbConnection": "Host=127.0.0.1;Database=HackYeah;Username=postgres;Password=StrongPassword"
+        "DbConnection": "Host=localhost;Database=HackYeah;Username=postgres;Password=StrongPassword"
       }
     },
     "https": {

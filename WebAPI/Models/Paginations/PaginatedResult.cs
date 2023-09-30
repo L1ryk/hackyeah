@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Models.Pagination;
+﻿namespace WebAPI.Models.Paginations;
 
 public class PaginatedResult< T >
 {
