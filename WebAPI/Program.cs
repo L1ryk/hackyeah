@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using NLog;
 using WebAPI.DataSource;
 using WebAPI.DataSource.Accessors.Interfaces;
@@ -10,7 +13,12 @@ var builder = WebApplication.CreateBuilder( args );
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson( options =>
+{
+    options.SerializerSettings.Converters.Add( new StringEnumConverter( new CamelCaseNamingStrategy() ) );
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+} );
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
