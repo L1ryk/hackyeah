@@ -41,6 +41,10 @@ public class ApiDbContext : DbContext
 
     public DbSet< Tag > Tags { get; set; }
 
+    public DbSet< Occupation > Occupations { get; set; }
+
+    public DbSet< CourseOccupation > CourseOccupations { get; set; }
+
     #endregion
 
     #region constructors and boilerplate

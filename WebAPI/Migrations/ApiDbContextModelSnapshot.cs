@@ -308,7 +308,13 @@ namespace WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CourseFormId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("CourseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CourseLevelId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Language")
@@ -322,7 +328,11 @@ namespace WebAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CourseFormId");
+
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("CourseLevelId");
 
                     b.HasIndex("UniversityId");
 
@@ -428,9 +438,21 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.DataSource.Entities.Univerisites.UniversityCourse", b =>
                 {
+                    b.HasOne("WebAPI.DataSource.Entities.Univerisites.CourseForm", "CourseForm")
+                        .WithMany()
+                        .HasForeignKey("CourseFormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WebAPI.DataSource.Entities.Univerisites.Course", "Course")
                         .WithMany()
                         .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAPI.DataSource.Entities.Univerisites.CourseLevel", "CourseLevel")
+                        .WithMany()
+                        .HasForeignKey("CourseLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -441,6 +463,10 @@ namespace WebAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Course");
+
+                    b.Navigation("CourseForm");
+
+                    b.Navigation("CourseLevel");
 
                     b.Navigation("University");
                 });
