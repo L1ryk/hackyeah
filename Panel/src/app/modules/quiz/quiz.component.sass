@@ -1,0 +1,41 @@
+.container
+  display: flex
+  justify-content: center
+  align-items: center
+  height: 90vh
+
+  .quiz-box
+    display: flex
+    flex-direction: column
+    align-items: center
+    padding-top: 20px
+    height: 100%
+
+    h2, h3, button
+      text-align: center
+      animation: fadeIn 2s
+      font-size: 25px
+      animation-fill-mode: forwards
+
+    h3, button
+      opacity: 0
+      animation-delay: 1s
+
+    button
+      display: flex
+      align-items: center
+      order: 0
+      text-align: center
+      visibility: hidden
+
+      mat-icon
+        font-size: 20px
+        order: 1
+
+@keyframes fadeIn
+  from
+    visibility: hidden
+    opacity: 0
+  to
+    visibility: visible
+    opacity: 1
