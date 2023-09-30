@@ -1,0 +1,7 @@
+using WebAPI.Models.Paginations;
+
+namespace WebAPI.Models.Responses.Universities;
+
+public class GetAllUniversityResponse : PaginatedResult<SimplifiedUniversityDto>
+{
+}

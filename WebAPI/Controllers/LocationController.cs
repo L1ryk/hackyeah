@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.DataSource;
 using WebAPI.DataSource.Accessors;
 using WebAPI.DataSource.Accessors.LocationAccessors;
+using WebAPI.DataSource.Entities.Locations;
 using WebAPI.DataSource.Entities.System;
 using WebAPI.Helpers;
 using WebAPI.Models.Paginations;
@@ -28,11 +29,11 @@ public class LocationController : Controller
     {
         Guard.IsNotNull( pagination );
 
-        var allCities = await _cityAccessor.GetAllCitiesAsync( pagination );
+        var cities = await _cityAccessor.GetAllCitiesAsync( pagination );
 
         return Ok( new Response<PaginatedResult<City>>
         {
-            IsSuccess = true, Result = new PaginatedResult<City> { Items = allCities.Items, ItemCount = allCities.ItemCount }
+            IsSuccess = true, Result = new PaginatedResult<City> { Items = cities.Items, ItemCount = cities.ItemCount }
         } );
     }
 
@@ -41,7 +42,7 @@ public class LocationController : Controller
     {
         Guard.IsNotNull( getCities );
 
-        var cities = await _cityAccessor.GetAllCitiesAsync( getCities );
+        var cities = await _cityAccessor.GetCitiesAsync( getCities );
 
         return Ok( new Response<PaginatedResult<City>>
         {

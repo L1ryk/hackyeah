@@ -2,9 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using WebAPI.DataSource;
 using WebAPI.DataSource.Accessors.LocationAccessors;
+using WebAPI.DataSource.Accessors.UniversityAccessors;
 
 var logger = LogManager.GetCurrentClassLogger();
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder( args );
 
 // Add services to the container.
 
@@ -13,16 +14,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var dbConnection = Environment.GetEnvironmentVariable("DbConnection");
+var dbConnection = Environment.GetEnvironmentVariable( "DbConnection" );
 
-builder.Services.AddDbContext<ApiDbContext>(options =>
+builder.Services.AddDbContext<ApiDbContext>( options =>
 {
-    options.UseNpgsql(dbConnection,
-        optionsBuilder => optionsBuilder.MigrationsAssembly(typeof(ApiDbContext).Assembly.FullName));
-});
+    options.UseNpgsql( dbConnection,
+        optionsBuilder => optionsBuilder.MigrationsAssembly( typeof(ApiDbContext).Assembly.FullName ) );
+} );
 
 // add services
 builder.Services.AddScoped<ICityAccessor, CityAccessor>();
+builder.Services.AddScoped<IUniversityAccessor, UniversityAccessor>();
 
 var app = builder.Build();
 
@@ -32,14 +34,14 @@ try
     var dbc = services.ServiceProvider.GetService<ApiDbContext>();
     dbc?.Database.Migrate();
 }
-catch (Exception ex)
+catch ( Exception ex )
 {
-    logger.Error(ex, "Problem with DB initialization");
+    logger.Error( ex, "Problem with DB initialization" );
 }
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if ( app.Environment.IsDevelopment() )
 {
     app.UseSwagger();
     app.UseSwaggerUI();

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebAPI.DataSource.Entities.Locations;
+using WebAPI.DataSource.Entities.System;
 
 namespace WebAPI.DataSource.Entities.Univerisites;
 
@@ -33,11 +35,11 @@ public class University
 
     public string Phone { get; set; }
 
-    public string Country { get; set; }
+    public Country Country { get; set; }
 
     public string Voivodeship { get; set; }
 
-    public string City { get; set; }
+    public City City { get; set; }
 
     public string PostCode { get; set; }
 

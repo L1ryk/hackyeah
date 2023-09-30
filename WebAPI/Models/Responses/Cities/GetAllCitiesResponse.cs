@@ -1,4 +1,5 @@
-﻿using WebAPI.DataSource.Entities.System;
+﻿using WebAPI.DataSource.Entities.Locations;
+using WebAPI.DataSource.Entities.System;
 using WebAPI.Models.Paginations;
 
 namespace WebAPI.Models.Responses.Cities;

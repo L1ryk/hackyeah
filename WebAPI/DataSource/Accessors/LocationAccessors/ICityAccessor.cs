@@ -6,5 +6,5 @@ namespace WebAPI.DataSource.Accessors.LocationAccessors;
 public interface ICityAccessor
 {
     Task<GetAllCitiesResponse> GetAllCitiesAsync( Pagination pagination );
-    Task<GetAllCitiesResponse> GetAllCitiesAsync( GetCities getCities );
+    Task<GetAllCitiesResponse> GetCitiesAsync( GetCities getCities );
 }

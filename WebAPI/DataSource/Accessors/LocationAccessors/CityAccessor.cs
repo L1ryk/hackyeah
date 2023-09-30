@@ -27,7 +27,7 @@ public class CityAccessor : ICityAccessor
         return new GetAllCitiesResponse { Items = cities, ItemCount = itemsCount };
     }
 
-    public async Task<GetAllCitiesResponse> GetAllCitiesAsync( GetCities getCities )
+    public async Task<GetAllCitiesResponse> GetCitiesAsync( GetCities getCities )
     {
         Guard.IsNotNull( getCities );
 
