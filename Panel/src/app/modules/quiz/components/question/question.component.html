@@ -4,11 +4,20 @@
   (keyup.enter)="onSubmitQuestion()"
 >
   <h2>{{ questions[currentIndex].text }}</h2>
-  <mat-form-field>
+  <mat-form-field *ngIf="!questions[currentIndex].isYesNoQuestion">
     <mat-label>Answer</mat-label>
     <input
       matInput
-      formControlName="answer"
+      formControlName="textAnswer"
     >
   </mat-form-field>
+  <ng-container *ngIf="questions[currentIndex].isYesNoQuestion">
+    <mat-radio-group
+      formControlName="booleanAnswer"
+    >
+      <mat-radio-button [value]="true">Tak</mat-radio-button>
+      <mat-radio-button [value]="false">Nie</mat-radio-button>
+    </mat-radio-group>
+  </ng-container>
+  <button mat-button (click)="onSubmitQuestion()">Dalej</button>
 </div>

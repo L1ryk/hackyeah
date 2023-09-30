@@ -10,7 +10,8 @@ import { AnswerInterface } from "../../../../interfaces/answer.interface";
 })
 export class QuestionComponent {
   form = this.fb.group({
-    answer: new FormControl<string>('')
+    textAnswer: new FormControl<string>(''),
+    booleanAnswer: new FormControl<boolean>(true),
   })
 
   answers: AnswerInterface[] = []
@@ -67,20 +68,23 @@ export class QuestionComponent {
   }
 
   onSubmitQuestion() {
-    let answer: string | boolean = this.form.value.answer as string
-
-    if (!answer) return
+    console.warn('dupa')
+    let answer: string | boolean
 
     const currentQuestion = this.questions[this.currentIndex]
 
     if (currentQuestion.isYesNoQuestion) {
-      answer = answer === 'Tak'
+      answer = this.form.value.booleanAnswer as boolean
+    } else {
+      answer = this.form.value.textAnswer as string
+
+      if (!answer) return
     }
 
     if (currentQuestion.filter) {
       this.answers.push({
         filter: currentQuestion.filter,
-        answer,
+        answer: answer,
       })
     } else {
       this.previousNotFilterAnswer = answer
