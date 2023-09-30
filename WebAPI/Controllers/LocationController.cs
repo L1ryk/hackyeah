@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebAPI.DataSource;
-using WebAPI.DataSource.Accessors;
 using WebAPI.DataSource.Accessors.LocationAccessors;
 using WebAPI.DataSource.Entities.Locations;
 using WebAPI.DataSource.Entities.System;

@@ -30,6 +30,8 @@ public class ApiDbContext : DbContext
     public DbSet< UniversityStatistics > UniversityStatistics { get; set; }
 
     public DbSet< Course > Courses { get; set; }
+    
+    public DbSet< CourseTag > Tags { get; set; }
 
     public DbSet< CourseForm > CourseForms { get; set; }
 

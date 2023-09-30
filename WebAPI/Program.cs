@@ -24,8 +24,10 @@ builder.Services.AddDbContext<ApiDbContext>( options =>
 
 // add services
 builder.Services.AddScoped<ICityAccessor, CityAccessor>();
-builder.Services.AddScoped<IUniversityAccessor, UniversityAccessor>();
 builder.Services.AddScoped<IVoivodeshipAccessor, VoivodeshipAccessor>();
+builder.Services.AddScoped<IUniversityAccessor, UniversityAccessor>();
+builder.Services.AddScoped<ICourseAccessor, CourseAccessor>();
+builder.Services.AddScoped<IUniversityCourseAccessor, UniversityCourseAccessor>();
 
 var app = builder.Build();
 
