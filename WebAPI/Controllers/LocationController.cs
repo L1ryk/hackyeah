@@ -19,11 +19,13 @@ public class LocationController : Controller
     private readonly ICityAccessor _cityAccessor;
     private readonly IVoivodeshipAccessor _voivodeshipAccessor;
 
-    public LocationController( ICityAccessor cityAccessor )
+    public LocationController( ICityAccessor cityAccessor, IVoivodeshipAccessor voivodeshipAccessor )
     {
         Guard.IsNotNull( cityAccessor );
+        Guard.IsNotNull( voivodeshipAccessor );
 
         _cityAccessor = cityAccessor;
+        _voivodeshipAccessor = voivodeshipAccessor;
     }
 
     [ HttpGet( "cities" ) ]

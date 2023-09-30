@@ -3,7 +3,6 @@ using NLog;
 using WebAPI.DataSource;
 using WebAPI.DataSource.Accessors.LocationAccessors;
 using WebAPI.DataSource.Accessors.UniversityAccessors;
-using WebAPI.DataSource.Entities.System;
 
 var logger = LogManager.GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder( args );
