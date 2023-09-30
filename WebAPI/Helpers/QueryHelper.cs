@@ -4,6 +4,7 @@ using WebAPI.DataSource.Entities;
 using WebAPI.DataSource.Entities.Univerisites;
 using WebAPI.Models.Paginations;
 using WebAPI.Models.Queries;
+using WebAPI.Models.Responses.Courses;
 using WebAPI.Models.Responses.UniversityCourses;
 
 namespace WebAPI.Helpers;
@@ -44,7 +45,7 @@ public static class QueryHelper
         };
     }
 
-    public static async Task<PaginationQuery<UniversityCourse>> PrepareCourseQueryAsync( GetUniversityCourses getUniversityCourses, ApiDbContext dbContext )
+    public static async Task<PaginationQuery<UniversityCourse>> PrepareUniversityCourseQueryAsync( GetUniversityCourses getUniversityCourses, ApiDbContext dbContext )
     {
         var query = dbContext.UniversityCourses.AsQueryable();
 
@@ -61,5 +62,23 @@ public static class QueryHelper
             query = query.Where( q => q.Profile == null || q.Profile.Equals( getUniversityCourses.Profile ) );
 
         return await query.GetPaginatedQuery( getUniversityCourses, dbContext );
+    }
+
+    public static async Task<PaginationQuery<Course>> PrepareCourseQueryAsync( GetCourses getCourses, ApiDbContext dbContext )
+    {
+        var query = dbContext.Courses
+            .Include( c => c.Tags )
+            .AsQueryable();
+
+        if ( !Guid.Empty.Equals( getCourses.Id ) )
+            query = query.Where( q => q.Id == getCourses.Id );
+
+        if ( !string.IsNullOrEmpty( getCourses.Name ) )
+            query = query.Where( q => q.Name.Equals( getCourses.Name ) );
+
+        if ( getCourses.TagIds.Any() )
+            query = query.Where( q => getCourses.TagIds.Select( t => t ).Intersect( getCourses.TagIds ).Any() );
+
+        return await query.GetPaginatedQuery( getCourses, dbContext );
     }
 }

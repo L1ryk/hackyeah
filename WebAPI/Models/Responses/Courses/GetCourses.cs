@@ -9,5 +9,5 @@ public class GetCourses : Pagination
 
     public string Name { get; set; }
 
-    public List<CourseTag> Tags { get; set; }
+    public List<Guid> TagIds { get; set; }
 }

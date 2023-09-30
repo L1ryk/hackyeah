@@ -33,7 +33,7 @@ public class UniversityCourseAccessor : IUniversityCourseAccessor
     {
         Guard.IsNotNull( getUniversityCourses );
 
-        var res = await QueryHelper.PrepareCourseQueryAsync( getUniversityCourses, _dbContext );
+        var res = await QueryHelper.PrepareUniversityCourseQueryAsync( getUniversityCourses, _dbContext );
 
         return new GetAllUniversityCoursesResponse { Items = res.Result, ItemCount = res.ItemsCount };
     }
