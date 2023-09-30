@@ -23,6 +23,10 @@ public class ApiDbContext : DbContext
     #region Universities
 
     public DbSet< University > Universities { get; set; }
+    
+    public DbSet< UniversityDetails > UniversitiesDetails { get; set; }
+    
+    public DbSet< UniversityStatistics > UniversityStatistics { get; set; }
 
     #endregion
 
