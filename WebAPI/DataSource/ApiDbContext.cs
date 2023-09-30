@@ -9,31 +9,39 @@ public class ApiDbContext : DbContext
 {
     #region System
 
-    public DbSet<User> Users { get; set; }
+    public DbSet< User > Users { get; set; }
 
     #endregion
 
     #region Locations
 
-    public DbSet<Voivodeship> Voivodeships { get; set; }
+    public DbSet< Voivodeship > Voivodeships { get; set; }
 
-    public DbSet<City> Cities { get; set; }
+    public DbSet< City > Cities { get; set; }
 
-    public DbSet<Country> Countries { get; set; }
+    public DbSet< Country > Countries { get; set; }
 
     #endregion
 
     #region Universities
 
-    public DbSet<University> Universities { get; set; }
+    public DbSet< University > Universities { get; set; }
 
-    public DbSet<UniversityStatistics> UniversityStatistics { get; set; }
+    public DbSet< UniversityStatistics > UniversityStatistics { get; set; }
+
+    public DbSet< Course > Courses { get; set; }
+
+    public DbSet< CourseForm > CourseForms { get; set; }
+
+    public DbSet< CourseLevel > CourseLevels { get; set; }
+
+    public DbSet< UniversityCourse > UniversityCourses { get; set; }
 
     #endregion
 
     #region constructors and boilerplate
 
-    public ApiDbContext( DbContextOptions<ApiDbContext> options )
+    public ApiDbContext( DbContextOptions< ApiDbContext > options )
         : base( options )
     {
     }

@@ -16,6 +16,9 @@ public class SchoolFetch
     private const string urlUniversityDetails =
         "https://aplikacje.edukacja.gov.pl/api/internal-data-hub/public/opi/university/{0}";
 
+    private const string urlCourses =
+        "https://aplikacje.edukacja.gov.pl/api/internal-data-hub/public/opi/university/{0}/course";
+
     public SchoolFetch( HttpClient client )
     {
         this.client = client;
@@ -54,12 +57,17 @@ public class SchoolFetch
     public async Task< University? > GetUniversityDetails( Guid id )
     {
         var url = string.Format( urlUniversityDetails, id.ToString() );
-        Console.WriteLine( url );
 
         var response = await client.GetStringAsync( url );
-        Console.Write( response );
 
         return JsonConvert.DeserializeObject< University >( response );
     }
-}
 
+    public async Task< Course[]? > GetCourserForUniversity( Guid id )
+    {
+        var url = string.Format( urlCourses, id.ToString() );
+        var response = await client.GetStringAsync( url );
+
+        return JsonConvert.DeserializeObject< CourseList >( response )?.List.ToArray();
+    }
+}
