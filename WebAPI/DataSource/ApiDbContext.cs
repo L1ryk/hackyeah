@@ -11,6 +11,14 @@ public class ApiDbContext : DbContext
 
     #endregion
 
+    #region Locations
+
+    public DbSet< Voivodeship > Voivodeships { get; set; }
+
+    public DbSet< City > Cities { get; set; }
+
+    #endregion
+
     #region constructors and boilerplate
 
     public ApiDbContext( DbContextOptions< ApiDbContext > options )
