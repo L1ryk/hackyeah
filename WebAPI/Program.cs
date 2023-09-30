@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using WebAPI.DataSource;
+using WebAPI.DataSource.Accessors.LocationAccessors;
 
 var logger = LogManager.GetCurrentClassLogger();
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,9 @@ builder.Services.AddDbContext<ApiDbContext>(options =>
         optionsBuilder => optionsBuilder.MigrationsAssembly(typeof(ApiDbContext).Assembly.FullName));
 });
 
+// add services
+builder.Services.AddScoped<ICityAccessor, CityAccessor>();
+
 var app = builder.Build();
 
 try
@@ -33,12 +37,14 @@ catch (Exception ex)
     logger.Error(ex, "Problem with DB initialization");
 }
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 

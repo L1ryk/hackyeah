@@ -7,7 +7,7 @@
         public string Error { get; set; }
     }
 
-    public class Response< T > : Response
+    public class Response<T> : Response
     {
         /// <summary> Empty constructor </summary>
         public Response()
