@@ -36,7 +36,7 @@ export class TestApiComponent {
         }
       })
     } else {
-      this.apiService.post$(this.form.value.endpoint, this.form.value.body).subscribe({
+      this.apiService.post$(this.form.value.endpoint, JSON.parse(this.form.value.body)).subscribe({
         next: res => {
           this.res = res
         },
