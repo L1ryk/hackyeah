@@ -1,0 +1,21 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{F74BCD36-4EB8-4107-8B57-260273F79EBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrap", "Scrap\Scrap.csproj", "{9ADADA3E-C2A6-4AF9-9734-2F16DBF802BD}"
+EndProject
+Global
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9ADADA3E-C2A6-4AF9-9734-2F16DBF802BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ADADA3E-C2A6-4AF9-9734-2F16DBF802BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ADADA3E-C2A6-4AF9-9734-2F16DBF802BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ADADA3E-C2A6-4AF9-9734-2F16DBF802BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F74BCD36-4EB8-4107-8B57-260273F79EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F74BCD36-4EB8-4107-8B57-260273F79EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F74BCD36-4EB8-4107-8B57-260273F79EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F74BCD36-4EB8-4107-8B57-260273F79EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+EndGlobal

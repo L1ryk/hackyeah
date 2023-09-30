@@ -94,7 +94,4 @@ foreach ( var universityId in universityList )
         Id = university.Id
     } );
     await db.SaveChangesAsync();
-
-    // Console.Write(  );
-    return;
 }
