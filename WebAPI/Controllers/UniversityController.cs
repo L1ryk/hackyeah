@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DataSource.Accessors.Interfaces;
-using WebAPI.DataSource.Accessors.UniversityAccessors;
 using WebAPI.DataSource.Entities.Univerisites;
 using WebAPI.Helpers;
 using WebAPI.Models.Paginations;
@@ -41,7 +40,7 @@ public class UniversityController : ControllerBase
                 return Ok( new Response<PaginatedResult<SimplifiedUniversityDto>>
                 {
                     IsSuccess = true,
-                    Result = new PaginatedResult<SimplifiedUniversityDto>()
+                    Result = new PaginatedResult<SimplifiedUniversityDto>
                     {
                         Items = universities.Items, ItemCount = universities.ItemCount
                     }

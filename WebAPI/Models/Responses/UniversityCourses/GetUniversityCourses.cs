@@ -1,5 +1,4 @@
-﻿using WebAPI.DataSource.Entities.Univerisites;
-using WebAPI.Models.Paginations;
+﻿using WebAPI.Models.Paginations;
 
 namespace WebAPI.Models.Responses.UniversityCourses;
 

@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.DataSource.Entities.Univerisites;
 
-public class Tag
+public class Tag : IEntity
 {
     public Guid Id { get; set; }
 
