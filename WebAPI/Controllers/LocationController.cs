@@ -9,6 +9,7 @@ using WebAPI.Helpers;
 using WebAPI.Models.Paginations;
 using WebAPI.Models.Responses;
 using WebAPI.Models.Responses.Cities;
+using WebAPI.Models.Responses.Voivodeships;
 
 namespace WebAPI.Controllers;
 
@@ -16,6 +17,7 @@ namespace WebAPI.Controllers;
 public class LocationController : Controller
 {
     private readonly ICityAccessor _cityAccessor;
+    private readonly IVoivodeshipAccessor _voivodeshipAccessor;
 
     public LocationController( ICityAccessor cityAccessor )
     {
@@ -47,6 +49,32 @@ public class LocationController : Controller
         return Ok( new Response<PaginatedResult<City>>
         {
             IsSuccess = true, Result = new PaginatedResult<City> { Items = cities.Items, ItemCount = cities.ItemCount }
+        } );
+    }
+    
+    [ HttpGet( "voivodeships" ) ]
+    public async Task<IActionResult> GetVoivodeships( [ FromQuery ] Pagination pagination )
+    {
+        Guard.IsNotNull( pagination );
+
+        var voivodeships = await _voivodeshipAccessor.GetAllVoivodeshipsAsync( pagination );
+
+        return Ok( new Response<PaginatedResult<Voivodeship>>
+        {
+            IsSuccess = true, Result = new PaginatedResult<Voivodeship> { Items = voivodeships.Items, ItemCount = voivodeships.ItemCount }
+        } );
+    }
+
+    [ HttpPost( "voivodeships" ) ]
+    public async Task<IActionResult> GetVoivodeships( [ FromBody ] GetVoivodeships getVoivodeships )
+    {
+        Guard.IsNotNull( getVoivodeships );
+
+        var voivodeships = await _voivodeshipAccessor.GetAllVoivodeshipsAsync( getVoivodeships );
+
+        return Ok( new Response<PaginatedResult<Voivodeship>>
+        {
+            IsSuccess = true, Result = new PaginatedResult<Voivodeship> { Items = voivodeships.Items, ItemCount = voivodeships.ItemCount }
         } );
     }
 }
