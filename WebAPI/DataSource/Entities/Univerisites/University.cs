@@ -61,7 +61,7 @@ public class University
 
     public string Epuap { get; set; }
 
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public string AvailabilityFormUrl { get; set; }
 

@@ -87,7 +87,7 @@ foreach ( var universityId in universityList )
         TaxId = university.TaxId,
         Type = university.Type,
         Website = university.Website,
-        CreatedDate = university.CreatedAt,
+        CreatedAt = university.CreatedAt,
         BuildingNumber = university.BuildingNumber,
         PostCode = university.PostalCode,
         RecruitmentLink = university.RecruitmentLink,
