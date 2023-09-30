@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebAPI.DataSource.Entities.System;
+using WebAPI.DataSource.Entities.Univerisites;
 
 namespace WebAPI.DataSource;
 
@@ -16,6 +17,12 @@ public class ApiDbContext : DbContext
     public DbSet< Voivodeship > Voivodeships { get; set; }
 
     public DbSet< City > Cities { get; set; }
+
+    #endregion
+
+    #region Universities
+
+    public DbSet< University > Universities { get; set; }
 
     #endregion
 
