@@ -50,7 +50,7 @@ public class LocationController : Controller
             IsSuccess = true, Result = new PaginatedResult<City> { Items = cities.Items, ItemCount = cities.ItemCount }
         } );
     }
-    
+
     [ HttpGet( "voivodeships" ) ]
     public async Task<IActionResult> GetVoivodeships( [ FromQuery ] Pagination pagination )
     {

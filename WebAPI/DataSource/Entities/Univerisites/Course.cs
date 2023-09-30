@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.DataSource.Entities.Univerisites;
 
-public class Course
+public class Course : IEntity
 {
     public Guid Id { get; set; }
 

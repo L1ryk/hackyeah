@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebAPI.Helpers;
+﻿using WebAPI.Helpers;
 using WebAPI.Models.Paginations;
 using WebAPI.Models.Responses.Universities;
 
@@ -20,21 +19,17 @@ public class UniversityAccessor : IUniversityAccessor
     {
         var query = _dbContext.Universities;
 
-        var itemsCount = await query.CountAsync();
-
         var universities = await query
             .OrderBy( u => u.Name )
-            .Skip( ( pagination.Page - 1 ) * pagination.Limit )
-            .Take( pagination.Limit )
-            .ToListAsync();
+            .GetPaginatedQuery( pagination, _dbContext );
 
         return new GetAllUniversityResponse
         {
-            Items = universities.Select( u => new SimplifiedUniversityDto
+            Items = universities.Result.Select( u => new SimplifiedUniversityDto
             {
                 Id = u.Id, Name = u.Name, City = u.City, Voivodeship = u.Voivodeship,
             } ),
-            ItemCount = itemsCount
+            ItemCount = universities.ItemsCount
         };
     }
 }

@@ -4,7 +4,7 @@ using WebAPI.DataSource.Entities.System;
 
 namespace WebAPI.DataSource.Entities.Univerisites;
 
-public class University
+public class University : IEntity
 {
     [Key]
     public Guid Id { get; set; }

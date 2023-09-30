@@ -7,6 +7,7 @@ using WebAPI.Models.Responses;
 using WebAPI.Models.Responses.Cities;
 using WebAPI.Models.Responses.Courses;
 using WebAPI.Models.Responses.Universities;
+using WebAPI.Models.Responses.UniversityCourses;
 
 namespace WebAPI.Controllers;
 
@@ -17,8 +18,8 @@ public class UniversityController : ControllerBase
     private readonly ICourseAccessor _courseAccessor;
     private readonly IUniversityCourseAccessor _universityCourseAccessor;
 
-    public UniversityController( IUniversityAccessor universityAccessor, 
-                                 ICourseAccessor courseAccessor, 
+    public UniversityController( IUniversityAccessor universityAccessor,
+                                 ICourseAccessor courseAccessor,
                                  IUniversityCourseAccessor universityCourseAccessor )
     {
         Guard.IsNotNull( universityAccessor );
@@ -85,7 +86,7 @@ public class UniversityController : ControllerBase
     }
 
     [ HttpPost( "university-courses" ) ]
-    public async Task<IActionResult> GetUniversityCourses( [ FromBody ] GetCourses getUniversityCourses )
+    public async Task<IActionResult> GetUniversityCourses( [ FromBody ] GetUniversityCourses getUniversityCourses )
     {
         Guard.IsNotNull( getUniversityCourses );
 

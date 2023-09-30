@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAPI.DataSource.Entities.Locations;
 using WebAPI.Helpers;
 using WebAPI.Models.Paginations;
 using WebAPI.Models.Responses.Cities;
@@ -17,14 +18,9 @@ public class CityAccessor : ICityAccessor
 
     public async Task<GetAllCitiesResponse> GetAllCitiesAsync( Pagination pagination )
     {
-        var query = _dbContext.Cities;
+        var query = await QueryHelper.GetPaginatedQuery<City>( pagination, _dbContext );
 
-        var itemsCount = await query.CountAsync();
-
-        var cities = await query.Skip( ( pagination.Page - 1 ) * pagination.Limit ).Take( pagination.Limit )
-            .ToListAsync();
-
-        return new GetAllCitiesResponse { Items = cities, ItemCount = itemsCount };
+        return new GetAllCitiesResponse { Items = query.Result, ItemCount = query.ItemsCount };
     }
 
     public async Task<GetAllCitiesResponse> GetCitiesAsync( GetCities getCities )

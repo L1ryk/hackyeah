@@ -3,7 +3,7 @@ using WebAPI.DataSource.Entities.System;
 
 namespace WebAPI.DataSource.Entities.Locations;
 
-public class City
+public class City : IEntity
 {
     [Key]
     public Guid Id { get; set; }

@@ -1,15 +1,15 @@
 ﻿using WebAPI.DataSource.Entities.Univerisites;
 using WebAPI.Models.Paginations;
 
-namespace WebAPI.Models.Responses.Courses;
+namespace WebAPI.Models.Responses.UniversityCourses;
 
 public class GetUniversityCourses : Pagination
 {
-    public Guid? Id { get; set; }
+    public Guid Id { get; set; }
 
-    public University? University { get; set; }
+    public Guid UniversityId { get; set; }
 
-    public Course? Course { get; set; }
+    public Guid CourseId { get; set; }
 
     public string? Language { get; set; }
 
