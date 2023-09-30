@@ -19,7 +19,7 @@ public class ApiDbContext : DbContext
 
     public DbSet<City> Cities { get; set; }
 
-    public DbSet<Country> Country { get; set; }
+    public DbSet<Country> Countries { get; set; }
 
     #endregion
 

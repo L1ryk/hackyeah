@@ -11,25 +11,23 @@ public class University
 
     public string Name { get; set; }
 
-    public string UniversityName { get; set; }
-
     public string PersonManaging { get; set; }
 
     public string SupervisoryAuthority { get; set; }
 
     public string Brand { get; set; }
 
-    public string Typ { get; set; }
+    public string Type { get; set; }
 
     public string Status { get; set; }
 
     public string Regon { get; set; }
 
-    public string Nip { get; set; }
+    public string TaxId { get; set; }
 
-    public string Krs { get; set; }
+    public string JudgeRegisterId { get; set; }
 
-    public string Www { get; set; }
+    public string Website { get; set; }
 
     public string Email { get; set; }
 
@@ -37,7 +35,7 @@ public class University
 
     public Country Country { get; set; }
 
-    public string Voivodeship { get; set; }
+    public Voivodeship Voivodeship { get; set; }
 
     public City City { get; set; }
 
@@ -45,7 +43,7 @@ public class University
 
     public string Street { get; set; }
 
-    public string Number { get; set; }
+    public string BuildingNumber { get; set; }
 
     public string ApartmentNumber { get; set; }
 
@@ -63,7 +61,7 @@ public class University
 
     public string Epuap { get; set; }
 
-    public string CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
     public string AvailabilityFormUrl { get; set; }
 
