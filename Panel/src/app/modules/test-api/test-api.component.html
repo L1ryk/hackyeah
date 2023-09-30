@@ -1,6 +1,11 @@
 <h2>API URL: {{ environment.apiUrl }}</h2>
 <form [formGroup]="form">
   Endpoint: <input matInput type="text" formControlName="endpoint">
+  <mat-radio-group formControlName="method">
+    <mat-radio-button value="get">Get</mat-radio-button>
+    <mat-radio-button value="post">Post</mat-radio-button>
+  </mat-radio-group>
+  <textarea *ngIf="form.value.method === 'post'" formControlName="body"></textarea>
   <button mat-button color="primary" (click)="apiGet()">Send</button>
 </form>
 <br>
