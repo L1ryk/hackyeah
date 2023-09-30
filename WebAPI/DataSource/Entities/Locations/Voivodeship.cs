@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WebAPI.DataSource.Entities.Locations;
 
-namespace WebAPI.DataSource.Entities.System;
+namespace WebAPI.DataSource.Entities.Locations;
 
-public class Voivodeship
+public class Voivodeship : IEntity
 {
     [ Key ]
     public Guid Id { get; set; }

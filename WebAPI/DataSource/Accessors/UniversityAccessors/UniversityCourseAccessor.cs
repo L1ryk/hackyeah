@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAPI.DataSource.Accessors.Interfaces;
+using WebAPI.DataSource.Entities.Univerisites;
 using WebAPI.Helpers;
 using WebAPI.Models.Paginations;
 using WebAPI.Models.Responses.Courses;
@@ -18,42 +20,17 @@ public class UniversityCourseAccessor : IUniversityCourseAccessor
 
     public async Task<GetAllUniversityCoursesResponse> GetAllUniversityCoursesAsync( Pagination pagination )
     {
-        var query = _dbContext.UniversityCourses;
+        var res = await QueryHelper.GetPaginatedQuery<UniversityCourse>( pagination, _dbContext );
 
-        var itemsCount = await query.CountAsync();
-
-        var universityCourses = await query.Skip( ( pagination.Page - 1 ) * pagination.Limit ).Take( pagination.Limit )
-            .ToListAsync();
-
-        return new GetAllUniversityCoursesResponse { Items = universityCourses, ItemCount = itemsCount };
+        return new GetAllUniversityCoursesResponse { Items = res.Result, ItemCount = res.ItemsCount };
     }
 
-    
-    /// <summary>
-    /// Get UniversityCourses by: id, university id, course id, language, profile
-    /// </summary>
     public async Task<GetAllUniversityCoursesResponse> GetUniversityCoursesAsync( GetUniversityCourses getUniversityCourses )
     {
         Guard.IsNotNull( getUniversityCourses );
 
-        var idPresent         = getUniversityCourses.Id             != null;
-        var universityPresent = getUniversityCourses.University?.Id != null;
-        var coursePresent     = getUniversityCourses.Course?.Id     != null;
-        var languagePresent   = getUniversityCourses.Language       != null;
-        var profilePresent    = getUniversityCourses.Profile        != null;
-        
-        var query = _dbContext.UniversityCourses
-            .Where( uc => ( !idPresent || uc.Id            == getUniversityCourses.Id )
-                          && ( !universityPresent   || uc.University.Id == getUniversityCourses.University.Id )
-                          && ( !coursePresent       || uc.Course.Id     == getUniversityCourses.Course.Id )
-                          && ( !languagePresent     || uc.Language      == getUniversityCourses.Language )
-                          && ( !profilePresent      || uc.Profile       == getUniversityCourses.Profile ) );
+        var res = await QueryHelper.PrepareUniversityCourseQueryAsync( getUniversityCourses, _dbContext );
 
-        var itemsCount = await query.CountAsync();
-
-        var universityCourses = await query.Skip( ( getUniversityCourses.Page - 1 ) * getUniversityCourses.Limit ).Take( getUniversityCourses.Limit )
-            .ToListAsync();
-
-        return new GetAllUniversityCoursesResponse { Items = universityCourses, ItemCount = itemsCount };
+        return new GetAllUniversityCoursesResponse { Items = res.Result, ItemCount = res.ItemsCount };
     }
 }

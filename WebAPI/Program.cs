@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using WebAPI.DataSource;
+using WebAPI.DataSource.Accessors.Interfaces;
 using WebAPI.DataSource.Accessors.LocationAccessors;
 using WebAPI.DataSource.Accessors.UniversityAccessors;
 
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IVoivodeshipAccessor, VoivodeshipAccessor>();
 builder.Services.AddScoped<IUniversityAccessor, UniversityAccessor>();
 builder.Services.AddScoped<ICourseAccessor, CourseAccessor>();
 builder.Services.AddScoped<IUniversityCourseAccessor, UniversityCourseAccessor>();
+builder.Services.AddScoped<ITagAccessor, TagAccessor>();
 
 var app = builder.Build();
 

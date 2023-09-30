@@ -2,7 +2,7 @@
 
 namespace WebAPI.DataSource.Entities.System;
 
-public class User
+public class User : IEntity
 {
     [Key]
     public Guid Id { get; set; }

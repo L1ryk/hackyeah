@@ -1,7 +1,7 @@
 ﻿using WebAPI.Models.Paginations;
 using WebAPI.Models.Responses.Cities;
 
-namespace WebAPI.DataSource.Accessors.LocationAccessors;
+namespace WebAPI.DataSource.Accessors.Interfaces;
 
 public interface ICityAccessor
 {

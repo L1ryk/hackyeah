@@ -1,7 +1,7 @@
 ﻿using WebAPI.Models.Paginations;
 using WebAPI.Models.Responses.Universities;
 
-namespace WebAPI.DataSource.Accessors.UniversityAccessors;
+namespace WebAPI.DataSource.Accessors.Interfaces;
 
 public interface IUniversityAccessor
 {

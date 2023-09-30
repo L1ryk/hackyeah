@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Scrap.Scrappers;
 using WebAPI.DataSource;
+
+using WebAPI.DataSource;
 using WebAPI.DataSource.Entities.Locations;
 using WebAPI.DataSource.Entities.System;
 using WebAPI.DataSource.Entities.Univerisites;
 
 var dbConnectionString = Environment.GetEnvironmentVariable( "DbConnection" );
+dbConnectionString = "Host=127.0.0.1;Database=HackYeah;Username=postgres;Password=StrongPassword";
 var dbConfigurationBuilder = new DbContextOptionsBuilder< ApiDbContext >();
 dbConfigurationBuilder.UseNpgsql( dbConnectionString,
                                   optionsBuilder =>
@@ -177,7 +180,9 @@ foreach ( var universityId in universityList )
                 Course = course,
                 University = record,
                 Language = courseItem.Language,
-                Profile = courseItem.EducationProfile
+                Profile = courseItem.EducationProfile,
+                CourseLevel = level,
+                CourseForm = form
             } );
 
             await db.SaveChangesAsync();
@@ -192,3 +197,7 @@ foreach ( var universityId in universityList )
         await db.Database.RollbackTransactionAsync();
     }
 }
+
+var path = "Z:\\zbiory.txt";
+var ti = new TagImporter( path );
+await ti.Import( db );

@@ -2,7 +2,7 @@
 
 namespace WebAPI.DataSource.Entities.Locations;
 
-public class Country
+public class Country : IEntity
 {
     [ Key ]
     public Guid Id { get; set; }
