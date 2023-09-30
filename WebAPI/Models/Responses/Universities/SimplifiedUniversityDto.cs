@@ -11,5 +11,5 @@ public class SimplifiedUniversityDto
 
     public City City { get; set; }
 
-    public string Voivodeship { get; set; }
+    public Voivodeship Voivodeship { get; set; }
 }
