@@ -11,6 +11,10 @@ public class GetUniversityCourses : Pagination
 
     public Guid CourseId { get; set; }
 
+    public Guid CourseLevelId { get; set; }
+
+    public Guid CourseFormId { get; set; }
+
     public string? Language { get; set; }
 
     public string? Profile { get; set; }

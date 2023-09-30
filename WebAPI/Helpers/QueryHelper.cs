@@ -55,6 +55,12 @@ public static class QueryHelper
         if ( !Guid.Empty.Equals( getUniversityCourses.CourseId ) )
             query = query.Where( q => q.Course.Id == getUniversityCourses.CourseId );
 
+        if ( !Guid.Empty.Equals( getUniversityCourses.CourseLevelId ) )
+            query = query.Where( q => q.CourseLevel.Id == getUniversityCourses.CourseLevelId );
+
+        if ( !Guid.Empty.Equals( getUniversityCourses.CourseFormId ) )
+            query = query.Where( q => q.CourseForm.Id == getUniversityCourses.CourseFormId );
+
         if ( !string.IsNullOrEmpty( getUniversityCourses.Language ) )
             query = query.Where( q => q.Language == null || q.Language.Equals( getUniversityCourses.Language ) );
 

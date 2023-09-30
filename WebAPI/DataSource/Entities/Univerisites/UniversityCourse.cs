@@ -11,4 +11,8 @@ public class UniversityCourse : IEntity
     public string? Language { get; set; }
 
     public string? Profile { get; set; }
+
+    public CourseLevel CourseLevel { get; set; }
+
+    public CourseForm CourseForm { get; set; }
 }
