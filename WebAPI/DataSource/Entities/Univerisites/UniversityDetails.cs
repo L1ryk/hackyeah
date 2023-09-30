@@ -6,6 +6,8 @@ public class UniversityDetails
 {
     [Key]
     public Guid Id { get; set; }
+    
+    public University University { get; set; }
 
     public string UniversityName { get; set; }
 
@@ -67,5 +69,5 @@ public class UniversityDetails
 
     public string PromotionalFilmUrl { get; set; }
 
-    public List<UniversityStatistics> Statistics { get; set; }
+    public ICollection<UniversityStatistics> Statistics { get; set; }
 }
