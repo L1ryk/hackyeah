@@ -57,18 +57,7 @@ namespace WebAPI.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("WebAPI.DataSource.Entities.System.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("WebAPI.DataSource.Entities.System.Voivodeship", b =>
+            modelBuilder.Entity("WebAPI.DataSource.Entities.Locations.Voivodeship", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,6 +75,17 @@ namespace WebAPI.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Voivodeships");
+                });
+
+            modelBuilder.Entity("WebAPI.DataSource.Entities.System.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("WebAPI.DataSource.Entities.Univerisites.Course", b =>
@@ -131,6 +131,42 @@ namespace WebAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CourseLevels");
+                });
+
+            modelBuilder.Entity("WebAPI.DataSource.Entities.Univerisites.CourseTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("CourseTags");
+                });
+
+            modelBuilder.Entity("WebAPI.DataSource.Entities.Univerisites.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("WebAPI.DataSource.Entities.Univerisites.University", b =>
@@ -324,7 +360,7 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.DataSource.Entities.Locations.City", b =>
                 {
-                    b.HasOne("WebAPI.DataSource.Entities.System.Voivodeship", "Voivodeship")
+                    b.HasOne("WebAPI.DataSource.Entities.Locations.Voivodeship", "Voivodeship")
                         .WithMany()
                         .HasForeignKey("VoivodeshipId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -333,7 +369,7 @@ namespace WebAPI.Migrations
                     b.Navigation("Voivodeship");
                 });
 
-            modelBuilder.Entity("WebAPI.DataSource.Entities.System.Voivodeship", b =>
+            modelBuilder.Entity("WebAPI.DataSource.Entities.Locations.Voivodeship", b =>
                 {
                     b.HasOne("WebAPI.DataSource.Entities.Locations.Country", "Country")
                         .WithMany()
@@ -342,6 +378,25 @@ namespace WebAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("WebAPI.DataSource.Entities.Univerisites.CourseTag", b =>
+                {
+                    b.HasOne("WebAPI.DataSource.Entities.Univerisites.Course", "Course")
+                        .WithMany("Tags")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAPI.DataSource.Entities.Univerisites.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("WebAPI.DataSource.Entities.Univerisites.University", b =>
@@ -358,7 +413,7 @@ namespace WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebAPI.DataSource.Entities.System.Voivodeship", "Voivodeship")
+                    b.HasOne("WebAPI.DataSource.Entities.Locations.Voivodeship", "Voivodeship")
                         .WithMany()
                         .HasForeignKey("VoivodeshipId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -399,6 +454,11 @@ namespace WebAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("University");
+                });
+
+            modelBuilder.Entity("WebAPI.DataSource.Entities.Univerisites.Course", b =>
+                {
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("WebAPI.DataSource.Entities.Univerisites.University", b =>
