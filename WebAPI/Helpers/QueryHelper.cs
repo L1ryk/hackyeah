@@ -133,7 +133,7 @@ public static class QueryHelper
         if ( tagsFilter is { Value: JArray tags } )
         {
             var listOfTags = tags.ToObject<List<Guid>>();
-            query = query.Where( uc => uc.Course.Tags.Any( t => listOfTags.Contains( t.Tag.Id ) ) );
+            query = query.OrderByDescending( uc => uc.Course.Tags.Any( t => listOfTags.Contains( t.Tag.Id ) ) );
         }
 
         if ( voivodeshipFilter != null )
