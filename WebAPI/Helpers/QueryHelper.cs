@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using WebAPI.DataSource;
 using WebAPI.DataSource.Entities;
 using WebAPI.DataSource.Entities.Univerisites;
@@ -115,27 +116,25 @@ public static class QueryHelper
         {
             var isStationary = Convert.ToBoolean( isStationaryFilter.Value );
 
-            var suggestion = isStationary ? "Stacjonarne" : "Niestacjonarne";
+            var suggestion = isStationary ? "stacjonarne" : "niestacjonarne";
 
-            query = query.Where( q => q.CourseForm.Name.Equals( suggestion ) );
+            query = query.Where( q => q.CourseForm.Name.ToLower().Equals( suggestion ) );
         }
 
-        if ( occupationFilter != null )
+        if ( occupationFilter != null && Guid.TryParse( occupationFilter.Value.ToString(), out Guid occGuid  ) )
         {
-            var filter = ( occupationFilter.Value.ToString() ?? String.Empty ).ToLower();
+            var occupations = await dbContext.CourseOccupations
+                .Include( co => co.Course )
+                .Where( o => o.Occupation.Id.Equals( occGuid ) ).ToListAsync();
 
-            if ( !string.IsNullOrEmpty( filter ) )
-            {
-                var occupations = await dbContext.CourseOccupations
-                    .Include( co => co.Course )
-                    .Where( o => o.Occupation.Name.ToLower().Equals( filter ) ).ToListAsync();
-
-                query = query.Where( q => occupations.Select( o => o.Course.Id ).Contains( q.Course.Id ) );
-            }
+            query = query.Where( q => occupations.Select( o => o.Course.Id ).Contains( q.Course.Id ) );
         }
 
-        if ( tagsFilter is { Value: List< Guid > tags } )
-            query = query.Where( uc => uc.Course.Tags.Any( t => tags.Contains( t.Tag.Id ) ) );
+        if ( tagsFilter is { Value: JArray tags } )
+        {
+            var listOfTags = tags.ToObject<List<Guid>>();
+            query = query.Where( uc => uc.Course.Tags.Any( t => listOfTags.Contains( t.Tag.Id ) ) );
+        }
 
         if ( voivodeshipFilter != null )
             query = query.Where( q => q.University.Voivodeship.Id == ( Guid )voivodeshipFilter.Value );
@@ -143,9 +142,11 @@ public static class QueryHelper
         if ( cityFilter != null && Guid.TryParse( cityFilter.Value.ToString(), out Guid guid ) )
             query = query.Where( q => q.University.City.Id == guid );
 
-        if ( levelFilter is { Value: List< string > levels } )
+        if ( levelFilter is { Value: JArray levels } )
         {
-            var level = levels
+            var listOfLevels = levels.ToObject < List<string>>();
+
+            var level = listOfLevels
                 .Select( l => l.ToLower() )
                 .Where( validateLevel )
                 .ToList();
@@ -154,12 +155,12 @@ public static class QueryHelper
                 query = query.Where( q => level.Contains( q.CourseLevel.Name.ToLower() ) );
         }
 
-        if ( brandFilter is { Value: List< string > brands } )
+        if ( brandFilter is { Value: JArray brands } )
         {
-            // var brands = ( brandFilter.Value.ToString() ?? String.Empty ).ToLower();
-            var collegeKind = brands
+            var listOfBrands = brands.ToObject<List<string>>();
+            var collegeKind = listOfBrands
                 .Select( l => l.ToString().ToLower() )
-                .Where( string.IsNullOrEmpty )
+                .Where( l => !string.IsNullOrEmpty( l ) )
                 .ToList();
 
             if ( collegeKind.Any() )
