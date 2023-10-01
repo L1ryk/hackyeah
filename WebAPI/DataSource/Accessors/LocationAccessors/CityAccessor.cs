@@ -1,4 +1,5 @@
-﻿using WebAPI.DataSource.Accessors.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using WebAPI.DataSource.Accessors.Interfaces;
 using WebAPI.DataSource.Entities.Locations;
 using WebAPI.Helpers;
 using WebAPI.Models.Paginations;
@@ -40,6 +41,7 @@ public class CityAccessor : ICityAccessor
         var part = searchCities.Part.ToLower();
 
         var occupationsQuery = _dbContext.Cities
+            .Include( c => c.Voivodeship )
             .Where( t => t.Name.ToLower().Contains( part ) )
             .OrderByDescending( t => t.Name.ToLower().StartsWith( part ) );
 
