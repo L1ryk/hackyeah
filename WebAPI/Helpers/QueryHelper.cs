@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json.Linq;
+using System.Linq.Expressions;
 using WebAPI.DataSource;
 using WebAPI.DataSource.Entities;
 using WebAPI.DataSource.Entities.Univerisites;
@@ -81,7 +83,7 @@ public static class QueryHelper
         ApiDbContext                                                                                    dbContext )
     {
         var query = dbContext.UniversityCourses
-            .Include( uc => uc.University )
+            .Include( uc => uc.University ).ThenInclude( u => u.City )
             .Include( uc => uc.Course )
             .Include( uc => uc.Course ).ThenInclude( c => c.Tags )
             .Include( uc => uc.CourseForm )
@@ -121,19 +123,31 @@ public static class QueryHelper
             query = query.Where( q => q.CourseForm.Name.ToLower().Equals( suggestion ) );
         }
 
+        Expression<Func<UniversityCourse, bool>>? occExpression = null;
+
         if ( occupationFilter != null && Guid.TryParse( occupationFilter.Value.ToString(), out Guid occGuid  ) )
         {
             var occupations = await dbContext.CourseOccupations
                 .Include( co => co.Course )
                 .Where( o => o.Occupation.Id.Equals( occGuid ) ).ToListAsync();
 
-            query = query.Where( q => occupations.Select( o => o.Course.Id ).Contains( q.Course.Id ) );
+            occExpression = occ => occupations.Select( o => o.Course.Id ).Contains( occ.Course.Id );
         }
+
+        Expression<Func<UniversityCourse, bool>>? tagExpression = null;
 
         if ( tagsFilter is { Value: JArray tags } )
         {
             var listOfTags = tags.ToObject<List<Guid>>();
-            query = query.OrderByDescending( uc => uc.Course.Tags.Any( t => listOfTags.Contains( t.Tag.Id ) ) );
+
+            tagExpression = uc => uc.Course.Tags.Any( t => listOfTags.Contains( t.Tag.Id ) );
+        }
+
+        if ( occExpression != null && tagExpression != null )
+        {
+            var occAndTagExpression = occExpression.OrElse( tagExpression );
+
+            query = query.Where( occAndTagExpression );
         }
 
         if ( voivodeshipFilter != null )
