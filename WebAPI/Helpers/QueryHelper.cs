@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using WebAPI.DataSource;
 using WebAPI.DataSource.Entities;
 using WebAPI.DataSource.Entities.Univerisites;
+using WebAPI.Models;
 using WebAPI.Models.Paginations;
 using WebAPI.Models.Queries;
 using WebAPI.Models.Responses.Courses;
@@ -12,7 +12,8 @@ namespace WebAPI.Helpers;
 
 public static class QueryHelper
 {
-    public static async Task<PaginationQuery<T>> GetPaginatedQuery<T>( Pagination pagination, ApiDbContext dbContext ) where T : class, IEntity
+    public static async Task<PaginationQuery<T>> GetPaginatedQuery<T>( Pagination pagination, ApiDbContext dbContext )
+        where T : class, IEntity
     {
         Guard.IsNotNull( pagination );
         Guard.IsNotNull( dbContext );
@@ -23,14 +24,11 @@ public static class QueryHelper
 
         var query = dbSet.Skip( ( pagination.Page - 1 ) * pagination.Limit ).Take( pagination.Limit );
 
-        return new PaginationQuery<T>
-        {
-            Result = await query.ToListAsync(),
-            ItemsCount = itemsCount
-        };
+        return new PaginationQuery<T> { Result = await query.ToListAsync(), ItemsCount = itemsCount };
     }
 
-    public static async Task<PaginationQuery<T>> GetPaginatedQuery<T>( this IQueryable<T> queryable, Pagination pagination, ApiDbContext dbContext ) where T : class, IEntity
+    public static async Task<PaginationQuery<T>> GetPaginatedQuery<T>( this IQueryable<T> queryable,
+        Pagination pagination, ApiDbContext dbContext ) where T : class, IEntity
     {
         Guard.IsNotNull( pagination );
         Guard.IsNotNull( dbContext );
@@ -39,14 +37,11 @@ public static class QueryHelper
 
         var query = queryable.Skip( ( pagination.Page - 1 ) * pagination.Limit ).Take( pagination.Limit );
 
-        return new PaginationQuery<T>
-        {
-            Result = await query.ToListAsync(),
-            ItemsCount = itemsCount
-        };
+        return new PaginationQuery<T> { Result = await query.ToListAsync(), ItemsCount = itemsCount };
     }
 
-    public static async Task<PaginationQuery<UniversityCourse>> PrepareUniversityCourseQueryAsync( GetUniversityCourses getUniversityCourses, ApiDbContext dbContext )
+    public static async Task<PaginationQuery<UniversityCourse>> PrepareUniversityCourseQueryAsync(
+        GetUniversityCourses getUniversityCourses, ApiDbContext dbContext )
     {
         var query = dbContext.UniversityCourses.AsQueryable();
 
@@ -71,7 +66,8 @@ public static class QueryHelper
         return await query.GetPaginatedQuery( getUniversityCourses, dbContext );
     }
 
-    public static async Task<PaginationQuery<UniversityCourse>> PrepareCourseQueryAsync( GetCourses getCourses, ApiDbContext dbContext )
+    public static async Task<PaginationQuery<UniversityCourse>> PrepareCourseQueryAsync( GetCourses getCourses,
+        ApiDbContext dbContext )
     {
         var query = dbContext.UniversityCourses
             .Include( uc => uc.University )
@@ -81,15 +77,27 @@ public static class QueryHelper
             .Include( uc => uc.CourseLevel )
             .AsQueryable();
 
-        var isStationaryFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "isstationary" ) );
+        query = await query.executeFilters( getCourses.Filters, dbContext );
 
-        var occupationFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "occupation" ) );
+        return await query.GetPaginatedQuery( getCourses, dbContext );
+    }
 
-        var tagsFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "tags" ) );
+    private static async Task<IQueryable<UniversityCourse>> executeFilters( this IQueryable<UniversityCourse> query,
+        IReadOnlyCollection<Filter> filters, ApiDbContext dbContext )
+    {
+        var isStationaryFilter = filters.FirstOrDefault( f => f.Property.ToLower().Equals( "isstationary" ) );
 
-        var voivodeshipFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "voivodeship" ) );
+        var occupationFilter = filters.FirstOrDefault( f => f.Property.ToLower().Equals( "occupation" ) );
 
-        var cityFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "city" ) );
+        var tagsFilter = filters.FirstOrDefault( f => f.Property.ToLower().Equals( "tags" ) );
+
+        var voivodeshipFilter = filters.FirstOrDefault( f => f.Property.ToLower().Equals( "voivodeship" ) );
+
+        var cityFilter = filters.FirstOrDefault( f => f.Property.ToLower().Equals( "city" ) );
+
+        var levelFilter = filters.FirstOrDefault( f => f.Property.ToLower().Equals( "level" ) );
+
+        var brandFilter = filters.FirstOrDefault( f => f.Property.ToLower().Equals( "brand" ) );
 
         if ( isStationaryFilter != null )
         {
@@ -104,22 +112,54 @@ public static class QueryHelper
         {
             var filter = ( occupationFilter.Value.ToString() ?? String.Empty ).ToLower();
 
-            var occupations = await dbContext.CourseOccupations
-                .Include( co => co.Course )
-                .Where( o => o.Occupation.Name.ToLower().Equals( filter ) ).ToListAsync();
+            if ( !string.IsNullOrEmpty( filter ) )
+            {
+                var occupations = await dbContext.CourseOccupations
+                    .Include( co => co.Course )
+                    .Where( o => o.Occupation.Name.ToLower().Equals( filter ) ).ToListAsync();
 
-            query = query.Where( q => occupations.Select( o => o.Course.Id ).Contains( q.Course.Id ) );
+                query = query.Where( q => occupations.Select( o => o.Course.Id ).Contains( q.Course.Id ) );
+            }
         }
 
-        if ( tagsFilter is { Value: List< Guid > tags } )
+        if ( tagsFilter is { Value: List<Guid> tags } )
             query = query.Where( uc => uc.Course.Tags.Any( t => tags.Contains( t.Tag.Id ) ) );
 
         if ( voivodeshipFilter != null )
-            query = query.Where( q => q.University.Voivodeship.Id == ( Guid ) voivodeshipFilter.Value );
+            query = query.Where( q => q.University.Voivodeship.Id == ( Guid )voivodeshipFilter.Value );
 
-        if ( cityFilter != null && Guid.TryParse( cityFilter.Value.ToString(), out Guid guid ))
+        if ( cityFilter != null && Guid.TryParse( cityFilter.Value.ToString(), out Guid guid ) )
             query = query.Where( q => q.University.City.Id == guid );
 
-        return await query.GetPaginatedQuery( getCourses, dbContext );
+        if ( levelFilter != null )
+        {
+            var level = ( levelFilter.Value.ToString() ?? String.Empty ).ToLower();
+
+            if ( validateLevel( level ) )
+                query = query.Where( q => q.CourseLevel.Name.ToLower().Equals( level ) );
+        }
+
+        if ( brandFilter != null )
+        {
+            var brand = ( brandFilter.Value.ToString() ?? String.Empty ).ToLower();
+
+            if ( !string.IsNullOrEmpty( brand ) )
+                query = query.Where( q => q.University.Brand.ToLower().Equals( brand ) );
+        }
+
+        return query;
+    }
+
+    private static bool validateLevel( string level )
+    {
+        if ( string.IsNullOrEmpty( level ) )
+            return false;
+
+        return level switch
+        {
+            "i stopnia" => true,
+            "jednolite magisterskie" => true,
+            _ => false
+        };
     }
 }
