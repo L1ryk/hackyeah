@@ -84,7 +84,12 @@ public static class QueryHelper
         var isStationaryFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "IsStationary" ) );
 
         var occupationFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "Occupation" ) );
+
         var tagsFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "Tags" ) );
+
+        var voivodeshipFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "Voivodeship" ) );
+
+        var cityFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "City" ) );
 
         if ( isStationaryFilter != null )
         {
@@ -105,6 +110,12 @@ public static class QueryHelper
 
         if ( tagsFilter is { Value: List< Guid > tags } )
             query = query.Where( uc => uc.Course.Tags.Any( t => tags.Contains( t.Tag.Id ) ) );
+
+        if ( voivodeshipFilter != null )
+            query = query.Where( q => q.University.Voivodeship.Id == ( Guid ) voivodeshipFilter.Value );
+
+        if ( cityFilter != null )
+            query = query.Where( q => q.University.City.Id == ( Guid ) cityFilter.Value );
 
         return await query.GetPaginatedQuery( getCourses, dbContext );
     }
