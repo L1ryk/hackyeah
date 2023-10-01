@@ -12,23 +12,29 @@ namespace WebAPI.Helpers;
 
 public static class QueryHelper
 {
-    public static async Task<PaginationQuery<T>> GetPaginatedQuery<T>( Pagination pagination, ApiDbContext dbContext )
+    public static async Task< PaginationQuery< T > > GetPaginatedQuery< T >( Pagination   pagination,
+                                                                             ApiDbContext dbContext )
         where T : class, IEntity
     {
         Guard.IsNotNull( pagination );
         Guard.IsNotNull( dbContext );
 
-        var dbSet = dbContext.Set<T>();
+        var dbSet = dbContext.Set< T >();
 
         var itemsCount = await dbSet.CountAsync();
 
         var query = dbSet.Skip( ( pagination.Page - 1 ) * pagination.Limit ).Take( pagination.Limit );
 
-        return new PaginationQuery<T> { Result = await query.ToListAsync(), ItemsCount = itemsCount };
+        return new PaginationQuery< T >
+        {
+            Result = await query.ToListAsync(), ItemsCount = itemsCount
+        };
     }
 
-    public static async Task<PaginationQuery<T>> GetPaginatedQuery<T>( this IQueryable<T> queryable,
-        Pagination pagination, ApiDbContext dbContext ) where T : class, IEntity
+    public static async Task< PaginationQuery< T > > GetPaginatedQuery< T >( this IQueryable< T > queryable,
+                                                                             Pagination           pagination,
+                                                                             ApiDbContext         dbContext )
+        where T : class, IEntity
     {
         Guard.IsNotNull( pagination );
         Guard.IsNotNull( dbContext );
@@ -37,11 +43,15 @@ public static class QueryHelper
 
         var query = queryable.Skip( ( pagination.Page - 1 ) * pagination.Limit ).Take( pagination.Limit );
 
-        return new PaginationQuery<T> { Result = await query.ToListAsync(), ItemsCount = itemsCount };
+        return new PaginationQuery< T >
+        {
+            Result = await query.ToListAsync(), ItemsCount = itemsCount
+        };
     }
 
-    public static async Task<PaginationQuery<UniversityCourse>> PrepareUniversityCourseQueryAsync(
-        GetUniversityCourses getUniversityCourses, ApiDbContext dbContext )
+    public static async Task< PaginationQuery< UniversityCourse > > PrepareUniversityCourseQueryAsync(
+        GetUniversityCourses getUniversityCourses,
+        ApiDbContext         dbContext )
     {
         var query = dbContext.UniversityCourses.AsQueryable();
 
@@ -66,8 +76,8 @@ public static class QueryHelper
         return await query.GetPaginatedQuery( getUniversityCourses, dbContext );
     }
 
-    public static async Task<PaginationQuery<UniversityCourse>> PrepareCourseQueryAsync( GetCourses getCourses,
-        ApiDbContext dbContext )
+    public static async Task< PaginationQuery< UniversityCourse > > PrepareCourseQueryAsync( GetCourses getCourses,
+        ApiDbContext                                                                                    dbContext )
     {
         var query = dbContext.UniversityCourses
             .Include( uc => uc.University )
@@ -82,8 +92,10 @@ public static class QueryHelper
         return await query.GetPaginatedQuery( getCourses, dbContext );
     }
 
-    private static async Task<IQueryable<UniversityCourse>> executeFilters( this IQueryable<UniversityCourse> query,
-        IReadOnlyCollection<Filter> filters, ApiDbContext dbContext )
+    private static async Task< IQueryable< UniversityCourse > > executeFilters(
+        this IQueryable< UniversityCourse > query,
+        IReadOnlyCollection< Filter >       filters,
+        ApiDbContext                        dbContext )
     {
         var isStationaryFilter = filters.FirstOrDefault( f => f.Property.ToLower().Equals( "isstationary" ) );
 
@@ -122,7 +134,7 @@ public static class QueryHelper
             }
         }
 
-        if ( tagsFilter is { Value: List<Guid> tags } )
+        if ( tagsFilter is { Value: List< Guid > tags } )
             query = query.Where( uc => uc.Course.Tags.Any( t => tags.Contains( t.Tag.Id ) ) );
 
         if ( voivodeshipFilter != null )
@@ -131,20 +143,27 @@ public static class QueryHelper
         if ( cityFilter != null && Guid.TryParse( cityFilter.Value.ToString(), out Guid guid ) )
             query = query.Where( q => q.University.City.Id == guid );
 
-        if ( levelFilter != null )
+        if ( levelFilter is { Value: List< string > levels } )
         {
-            var level = ( levelFilter.Value.ToString() ?? String.Empty ).ToLower();
+            var level = levels
+                .Select( l => l.ToLower() )
+                .Where( validateLevel )
+                .ToList();
 
-            if ( validateLevel( level ) )
-                query = query.Where( q => q.CourseLevel.Name.ToLower().Equals( level ) );
+            if ( levels.Any() )
+                query = query.Where( q => level.Contains( q.CourseLevel.Name.ToLower() ) );
         }
 
-        if ( brandFilter != null )
+        if ( brandFilter is { Value: List< string > brands } )
         {
-            var brand = ( brandFilter.Value.ToString() ?? String.Empty ).ToLower();
+            // var brands = ( brandFilter.Value.ToString() ?? String.Empty ).ToLower();
+            var collegeKind = brands
+                .Select( l => l.ToString().ToLower() )
+                .Where( string.IsNullOrEmpty )
+                .ToList();
 
-            if ( !string.IsNullOrEmpty( brand ) )
-                query = query.Where( q => q.University.Brand.ToLower().Equals( brand ) );
+            if ( collegeKind.Any() )
+                query = query.Where( q => collegeKind.Contains( q.University.Brand.ToLower() ) );
         }
 
         return query;
