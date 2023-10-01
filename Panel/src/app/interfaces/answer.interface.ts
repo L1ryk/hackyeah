@@ -1,4 +1,4 @@
 export interface AnswerInterface {
-  answer: string | boolean
+  answer: string | boolean | string[]
   filter: string
 }

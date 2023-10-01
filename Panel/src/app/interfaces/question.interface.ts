@@ -1,3 +1,5 @@
+import { SearchItemInterface } from "./search-item.interface"
+
 export interface QuestionInterface {
   text: string
   filter?: string
@@ -5,6 +7,6 @@ export interface QuestionInterface {
   isYesNoQuestion?: boolean
   autocompleteEndpoint?: string
   multiple?: boolean
-  staticValues?: string[]
+  staticValues?: SearchItemInterface[]
   hasNullOption?: boolean
 }

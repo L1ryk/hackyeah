@@ -1,8 +1,14 @@
+<button
+  class="reset-button"
+  mat-button color="primary"
+  (click)="reset()"
+>Zacznij od nowa
+</button>
+
 <div
   class="container"
   [formGroup]="form"
 >
-  <button mat-button color="primary" (click)="reset()">RESET</button>
   <h2>{{ questions[currentIndex].text }}</h2>
   <!--  <mat-form-field *ngIf="!questions[currentIndex].isYesNoQuestion">-->
   <!--    <mat-label>Answer</mat-label>-->
@@ -25,10 +31,10 @@
     notFoundText="Nie znaleziono"
     formControlName="textAnswer"
     placeholder="Wpisz min.3 znaki"
-    [clearable]="false"
+    [clearable]="true"
     [searchable]="true"
     [multiple]="questions[currentIndex].multiple || false"
-    [items]="(autocompleteOptions | async) || questions[currentIndex].staticValues || []"
+    [items]="questions[currentIndex].staticValues ? (questions[currentIndex].staticValues || []) : autocompleteOptions | async"
     [searchWhileComposing]="false"
     [searchFn]="searchFn"
     (search)="updateAutoComplete($event.term)"
@@ -48,10 +54,39 @@
   <ng-container *ngIf="questions[currentIndex].isYesNoQuestion">
     <mat-radio-group
       formControlName="booleanAnswer"
+      color="primary"
+      class="boolean-answer"
     >
       <mat-radio-button [value]="true">Tak</mat-radio-button>
       <mat-radio-button [value]="false">Nie</mat-radio-button>
+      <mat-radio-button
+        *ngIf="questions[currentIndex].hasNullOption"
+        [value]="null"
+      >
+        Nie wiem
+      </mat-radio-button>
     </mat-radio-group>
   </ng-container>
-  <button mat-button (click)="onSubmitQuestion()">Dalej</button>
+  <div class="buttons-container">
+    <button
+      mat-button
+      class="submit-button"
+      color="accent"
+      type="button"
+      (click)="onSubmitQuestion()"
+    >
+      Dalej
+    </button>
+
+    <button
+      *ngIf="!questions[currentIndex].isYesNoQuestion && questions[currentIndex].hasNullOption"
+      mat-button
+      class="skip-button"
+      color="primary"
+      type="button"
+      (click)="onSubmitQuestion(true)"
+    >
+      Nie wiem
+    </button>
+  </div>
 </div>

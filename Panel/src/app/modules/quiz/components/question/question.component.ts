@@ -6,6 +6,7 @@ import { ApiService } from "../../../../services/api.service";
 import { map, Observable, of } from "rxjs";
 import { ResultMany } from "../../../../interfaces/api.interface";
 import { Router } from "@angular/router";
+import { SearchItemInterface } from 'src/app/interfaces/search-item.interface';
 
 @Component({
   selector: 'app-question',
@@ -14,15 +15,12 @@ import { Router } from "@angular/router";
 })
 export class QuestionComponent {
   form = this.fb.group({
-    textAnswer: new FormControl<string | string[]>(''),
-    booleanAnswer: new FormControl<boolean>(true),
+    textAnswer: new FormControl<SearchItemInterface | SearchItemInterface[] | null>(null),
+    booleanAnswer: new FormControl<boolean | null>(true),
   })
   answers: AnswerInterface[] = []
-
-  previousNotFilterAnswer: string | boolean | undefined
   currentIndex = 0
-
-  autocompleteOptions: Observable<{ id: string, name: string }[]>
+  autocompleteOptions: Observable<SearchItemInterface[]>
 
   readonly searchFn = () => {
     return true
@@ -51,40 +49,58 @@ export class QuestionComponent {
       multiple: true,
     },
     {
-      text: 'Czy chcesz studiować niestacjonarnie/weekendowo?',
+      text: 'Czy chcesz studiować stacjonarnie?',
       filter: 'isStationary',
       isYesNoQuestion: true,
+      hasNullOption: true,
     },
-    // {
-    //   text: 'Czy interesują Cię uczelnie poza Twoim miejscem zamieszkania?',
-    //   isYesNoQuestion: true,
-    // },
-    // {
-    //   text: 'Jak daleko chciałbyś dojeżdżać?',
-    //   filter: 'distance',
-    //   previousHasToBeTruthy: true,
-    // },
     {
-      text: 'Gdzie mieszkasz?',
+      text: 'Czy wiesz w jakim mieście chciałbyś studiować?',
+      previousHasToBeTruthy: true,
+      isYesNoQuestion: true,
+    },
+    {
+      text: 'Jakie to miasto?',
       filter: 'city',
       previousHasToBeTruthy: true,
       autocompleteEndpoint: '/api/location/search_cities'
     },
     {
-      text: 'Jaki typ uczelni Cię interesuje?',
+      text: 'Jaki rodzaj uczelni Cię interesuje?',
       filter: 'brand',
+      multiple: true,
       staticValues: [
-        'Uczelnia publiczna',
-        'Uczelnia niepubliczna',
-        'Uczelnia kościelna'
+        {
+          id: 'Uczelnia publiczna',
+          name: 'Uczelnia publiczna',
+        },
+        {
+          id: 'Uczelnia niepubliczna',
+          name: 'Uczelnia niepubliczna',
+        },
+        {
+          id: 'Uczelnia kościelna',
+          name: 'Uczelnia kościelna',
+        },
       ],
-      // isYesNoQuestion: true,
+      hasNullOption: true,
     },
-    // {
-    //   text: 'Jaki tytuł chciałbyś otrzymać po ukończeniu studiów?',
-    //   filter: 'title',
-    //   autocompleteEndpoint: '/api/title/search'
-    // }
+    {
+      text: 'Na jaki poziom studiów chciałbyś pójść',
+      filter: 'level',
+      multiple: true,
+      staticValues: [
+        {
+          id: 'I stopnia',
+          name: 'I stopnia',
+        },
+        {
+          id: 'Jednolite magisterskie',
+          name: 'Jednolite magisterskie',
+        },
+      ],
+      hasNullOption: true,
+    },
   ]
 
   constructor(
@@ -94,7 +110,7 @@ export class QuestionComponent {
   ) {
   }
 
-  onSubmitQuestion() {
+  onSubmitQuestion(allowNull = false) {
     let answer: string | boolean | string[]
 
     const currentQuestion = this.questions[this.currentIndex]
@@ -102,18 +118,22 @@ export class QuestionComponent {
     if (currentQuestion.isYesNoQuestion) {
       answer = this.form.value.booleanAnswer as boolean
     } else {
-      answer = this.form.value.textAnswer as string
+      const textAnswer = this.form.value.textAnswer
 
-      if (!answer) return
+      if (Array.isArray(textAnswer)) {
+        answer = textAnswer.map(a => a.id)
+      } else {
+        answer = textAnswer?.id as string
+      }
+
+      if (!allowNull && (!answer || !answer.length)) return
     }
 
-    if (currentQuestion.filter) {
+    if (currentQuestion.filter && answer) {
       this.answers.push({
         filter: currentQuestion.filter,
-        answer: answer,
+        answer,
       })
-    } else {
-      this.previousNotFilterAnswer = answer
     }
 
     if (this.currentIndex < this.questions.length - 1) {
@@ -123,7 +143,11 @@ export class QuestionComponent {
         this.currentIndex += 1
       }
 
-      this.form.reset()
+      this.updateAutoComplete('')
+      this.form.reset({
+        textAnswer: null,
+        booleanAnswer: true,
+      })
     } else {
       this.router.navigate(['/search'], {queryParams: {data: JSON.stringify(this.answers)}})
     }
@@ -155,8 +179,10 @@ export class QuestionComponent {
   reset() {
     this.currentIndex = 0
     this.answers = []
-    this.previousNotFilterAnswer = undefined
-    this.form.reset()
+    this.form.reset({
+      textAnswer: null,
+      booleanAnswer: true,
+    })
   }
 
   private getNextQuestionJump(answer: boolean, jump = 1): number {

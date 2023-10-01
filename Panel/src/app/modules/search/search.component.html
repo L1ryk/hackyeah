@@ -1,9 +1,11 @@
-<a [routerLink]="['/']">Zacznij od nowa</a>
+<div class="container">
+  <a class="start-over" [routerLink]="['/']">Zacznij od nowa</a>
 
-<h1>Wybrane dla Ciebie kierunki:</h1>
+  <h1>Wybrane dla Ciebie kierunki:</h1>
 
-<div class="courses-container">
-  <app-courses-list
-    [coursesList]="courses | async"
-  ></app-courses-list>
+  <div class="courses-container">
+    <app-courses-list
+      [coursesList]="courses | async"
+    ></app-courses-list>
+  </div>
 </div>
