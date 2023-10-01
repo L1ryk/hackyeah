@@ -3,8 +3,10 @@ using WebAPI.DataSource.Accessors.Interfaces;
 using WebAPI.DataSource.Entities.Locations;
 using WebAPI.Helpers;
 using WebAPI.Models.Paginations;
+using WebAPI.Models.Queries;
 using WebAPI.Models.Responses;
 using WebAPI.Models.Responses.Cities;
+using WebAPI.Models.Responses.Locations;
 using WebAPI.Models.Responses.Voivodeships;
 
 namespace WebAPI.Controllers;
@@ -92,5 +94,31 @@ public class LocationController : Controller
                         Items = voivodeships.Items, ItemCount = voivodeships.ItemCount
                     }
                 } );
+            } );
+
+    [HttpPost("getdistance")]
+    public async Task<IActionResult> GetDistance( [ FromBody ] DistanceQuery distanceQuery ) =>
+        await ErrorHandler.HandlerAsync( 
+            async () =>
+            {
+                Guard.IsNotNull( distanceQuery );
+                Guard.IsNotNull( distanceQuery.First );
+                Guard.IsNotNull( distanceQuery.Second );
+
+                double x = 69.1 * (distanceQuery.Second.Latitude - distanceQuery.First.Latitude);
+                double y = 69.1 * (distanceQuery.Second.Longitude - distanceQuery.First.Longitude)
+                                * Math.Cos(distanceQuery.First.Latitude / 57.3);
+
+                const float milesToKmMultiplier = 1.609344f;
+                var distanceKm = (Math.Sqrt(x * x + y * y) * milesToKmMultiplier);
+                
+                return Ok(new Response<GetDistanceResponse>()
+                {
+                    IsSuccess = true,
+                    Result = new GetDistanceResponse
+                    {
+                        Distance = distanceKm
+                    }
+                });
             } );
 }
