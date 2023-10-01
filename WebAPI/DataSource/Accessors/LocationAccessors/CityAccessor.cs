@@ -10,6 +10,7 @@ namespace WebAPI.DataSource.Accessors.LocationAccessors;
 public class CityAccessor : ICityAccessor
 {
     private readonly ApiDbContext _dbContext;
+
     public CityAccessor( ApiDbContext dbContext )
     {
         Guard.IsNotNull( dbContext );
@@ -31,6 +32,20 @@ public class CityAccessor : ICityAccessor
         var query = _dbContext.Cities.Where( c => c.Voivodeship.Id == getCities.VoivodeshipId );
 
         var res = await query.GetPaginatedQuery( getCities, _dbContext );
+
+        return new GetAllCitiesResponse { Items = res.Result, ItemCount = res.ItemsCount };
+    }
+
+    public async Task<GetAllCitiesResponse> SearchCitiesAsync( SearchCities searchCities )
+    {
+        var part = searchCities.Part.ToLower();
+
+        var occupationsQuery = _dbContext.Cities
+            .Include( c => c.Voivodeship )
+            .Where( t => t.Name.ToLower().Contains( part ) )
+            .OrderByDescending( t => t.Name.ToLower().StartsWith( part ) );
+
+        var res = await occupationsQuery.GetPaginatedQuery( searchCities, _dbContext );
 
         return new GetAllCitiesResponse { Items = res.Result, ItemCount = res.ItemsCount };
     }

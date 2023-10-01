@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using WebAPI.DataSource;
 using WebAPI.DataSource.Entities;
 using WebAPI.DataSource.Entities.Univerisites;
@@ -70,20 +71,54 @@ public static class QueryHelper
         return await query.GetPaginatedQuery( getUniversityCourses, dbContext );
     }
 
-    public static async Task<PaginationQuery<Course>> PrepareCourseQueryAsync( GetCourses getCourses, ApiDbContext dbContext )
+    public static async Task<PaginationQuery<UniversityCourse>> PrepareCourseQueryAsync( GetCourses getCourses, ApiDbContext dbContext )
     {
-        var query = dbContext.Courses
-            .Include( c => c.Tags )
+        var query = dbContext.UniversityCourses
+            .Include( uc => uc.University )
+            .Include( uc => uc.Course )
+            .Include( uc => uc.Course ).ThenInclude( c => c.Tags )
+            .Include( uc => uc.CourseForm )
+            .Include( uc => uc.CourseLevel )
             .AsQueryable();
 
-        if ( !Guid.Empty.Equals( getCourses.Id ) )
-            query = query.Where( q => q.Id == getCourses.Id );
+        var isStationaryFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "isstationary" ) );
 
-        if ( !string.IsNullOrEmpty( getCourses.Name ) )
-            query = query.Where( q => q.Name.Equals( getCourses.Name ) );
+        var occupationFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "occupation" ) );
 
-        if ( getCourses.TagIds.Any() )
-            query = query.Where( q => getCourses.TagIds.Select( t => t ).Intersect( getCourses.TagIds ).Any() );
+        var tagsFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "tags" ) );
+
+        var voivodeshipFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "voivodeship" ) );
+
+        var cityFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "city" ) );
+
+        if ( isStationaryFilter != null )
+        {
+            var isStationary = Convert.ToBoolean( isStationaryFilter.Value );
+
+            var suggestion = isStationary ? "Stacjonarne" : "Niestacjonarne";
+
+            query = query.Where( q => q.CourseForm.Name.Equals( suggestion ) );
+        }
+
+        if ( occupationFilter != null )
+        {
+            var filter = ( occupationFilter.Value.ToString() ?? String.Empty ).ToLower();
+
+            var occupations = await dbContext.CourseOccupations
+                .Include( co => co.Course )
+                .Where( o => o.Occupation.Name.ToLower().Equals( filter ) ).ToListAsync();
+
+            query = query.Where( q => occupations.Select( o => o.Course.Id ).Contains( q.Course.Id ) );
+        }
+
+        if ( tagsFilter is { Value: List< Guid > tags } )
+            query = query.Where( uc => uc.Course.Tags.Any( t => tags.Contains( t.Tag.Id ) ) );
+
+        if ( voivodeshipFilter != null )
+            query = query.Where( q => q.University.Voivodeship.Id == ( Guid ) voivodeshipFilter.Value );
+
+        if ( cityFilter != null && Guid.TryParse( cityFilter.Value.ToString(), out Guid guid ))
+            query = query.Where( q => q.University.City.Id == guid );
 
         return await query.GetPaginatedQuery( getCourses, dbContext );
     }

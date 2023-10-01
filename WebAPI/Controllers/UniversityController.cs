@@ -56,10 +56,10 @@ public class UniversityController : ControllerBase
 
                 var courses = await _courseAccessor.GetAllCoursesAsync( pagination );
 
-                return Ok( new Response<PaginatedResult<Course>>
+                return Ok( new Response<PaginatedResult<UniversityCourse>>
                 {
                     IsSuccess = true,
-                    Result = new PaginatedResult<Course> { Items = courses.Items, ItemCount = courses.ItemCount }
+                    Result = new PaginatedResult<UniversityCourse> { Items = courses.Items, ItemCount = courses.ItemCount }
                 } );
             } );
 
@@ -72,10 +72,10 @@ public class UniversityController : ControllerBase
 
                 var courses = await _courseAccessor.GetCoursesAsync( getCourses );
 
-                return Ok( new Response<PaginatedResult<Course>>
+                return Ok( new Response<PaginatedResult<UniversityCourse>>
                 {
                     IsSuccess = true,
-                    Result = new PaginatedResult<Course> { Items = courses.Items, ItemCount = courses.ItemCount }
+                    Result = new PaginatedResult<UniversityCourse> { Items = courses.Items, ItemCount = courses.ItemCount }
                 } );
             } );
 
