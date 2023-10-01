@@ -33,4 +33,9 @@ public class UniversityAccessor : IUniversityAccessor
             ItemCount = universities.ItemsCount
         };
     }
+
+    public Task<GetUniversitiesResponse> GetUniversitiesAsync( GetUniversities getUniversities )
+    {
+        var query = _dbContext.Universities;
+    }
 }

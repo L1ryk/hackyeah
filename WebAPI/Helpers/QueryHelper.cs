@@ -72,18 +72,40 @@ public static class QueryHelper
 
     public static async Task<PaginationQuery<Course>> PrepareCourseQueryAsync( GetCourses getCourses, ApiDbContext dbContext )
     {
-        var query = dbContext.Courses
-            .Include( c => c.Tags )
+        var query = dbContext.UniversityCourses
+            .Include( uc => uc.Course ).ThenInclude( c => c.Tags )
+            .Include( uc => uc.CourseForm )
+            .Include( uc => uc.CourseLevel )
             .AsQueryable();
 
-        if ( !Guid.Empty.Equals( getCourses.Id ) )
-            query = query.Where( q => q.Id == getCourses.Id );
+        var isStationaryFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "IsStationary" ) );
 
-        if ( !string.IsNullOrEmpty( getCourses.Name ) )
-            query = query.Where( q => q.Name.Equals( getCourses.Name ) );
+        var occupationFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "Occupation" ) );
+        var tagsFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "Tags" ) );
 
-        if ( getCourses.TagIds.Any() )
-            query = query.Where( q => getCourses.TagIds.Select( t => t ).Intersect( getCourses.TagIds ).Any() );
+        if ( isStationaryFilter != null )
+        {
+            var isStationary = Convert.ToBoolean( isStationaryFilter.Value );
+
+            var suggestion = isStationary ? "Stacjonarne" : "Niestacjonarne";
+
+            query = query.Where( q => q.CourseForm.Name.Equals( suggestion ) );
+        }
+
+        if ( occupationFilter != null )
+        {
+            var occupations = await dbContext.CourseOccupations
+                .Where( o => o.Course.Name.Equals( occupationFilter.Value.ToString() ) ).ToListAsync();
+
+            query = query.Where( q => occupations.Select( o => o.Course.Id ).Contains( q.Course.Id ) );
+        }
+
+        if ( tagsFilter != null )
+        {
+            var tags = tagsFilter.Value as List<Guid>;
+
+            query = query.Where( q => tags.Contains( q.Course.Tags.Select( t => t.Tag.Id ) ) )
+        }
 
         return await query.GetPaginatedQuery( getCourses, dbContext );
     }

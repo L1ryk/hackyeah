@@ -31,7 +31,7 @@ public class OccupationAccessor : IOccupationAccessor
 
     public async Task< MeetOccupationsResponse > GetMeetOccupation( MeetOccupationQuery meetOccupationQuery )
     {
-        var occupationsQuery = dbContext.Occupations.Where( t => t.Name.ToLower().StartsWith( meetOccupationQuery.Part.ToLower() ) );
+        var occupationsQuery = dbContext.Occupations.Where( t => t.Name.ToLower().Contains( meetOccupationQuery.Part.ToLower() ) );
 
         var res = await occupationsQuery.GetPaginatedQuery( meetOccupationQuery, dbContext );
 
