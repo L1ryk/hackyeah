@@ -2,7 +2,7 @@
   *ngIf="currentIndex"
   mat-button
   class="reset-button"
-  color="accent"
+  color="warn"
   (click)="reset()"
 >
   Zacznij od nowa
@@ -41,7 +41,7 @@
   <ng-container *ngIf="questions[currentIndex].isYesNoQuestion">
     <mat-radio-group
       formControlName="booleanAnswer"
-      color="accent"
+      color="primary"
       class="boolean-answer"
     >
       <mat-radio-button [value]="true">Tak</mat-radio-button>
@@ -58,7 +58,7 @@
     <button
       mat-button
       class="submit-button"
-      color="accent"
+      color="primary"
       type="button"
       (click)="onSubmitQuestion()"
     >
@@ -69,7 +69,7 @@
       *ngIf="!questions[currentIndex].isYesNoQuestion && questions[currentIndex].hasNullOption"
       mat-button
       class="skip-button"
-      color="primary"
+      color="warn"
       type="button"
       (click)="onSubmitQuestion(true)"
     >

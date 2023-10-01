@@ -1,8 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 @use 'custom-theme'
-@import "~@ng-select/ng-select/themes/material.theme.css"
+@use 'palette' as *
+@import "@ng-select/ng-select/themes/material.theme.css"
 
 .ng-select-label
   .ng-select-option__desc
     h4
       margin: 0
+
+.ng-select
+  .ng-select-container
+    .ng-value-container
+      .ng-placeholder
+        color: #219c90
+
+.ng-select
+  &.ng-select-focused
+    .ng-select-container
+      .ng-value-container
+        .ng-placeholder
+          color: #219c90
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected
+  color: #219c90
