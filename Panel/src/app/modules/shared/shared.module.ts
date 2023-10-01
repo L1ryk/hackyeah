@@ -4,6 +4,7 @@ import { ToolbarComponent } from "./toolbar/toolbar.component";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const components = [
   ToolbarComponent,
@@ -14,6 +15,7 @@ const imports = [
   MaterialModule,
   RouterModule,
   ReactiveFormsModule,
+  NgSelectModule,
 ]
 
 @NgModule({
@@ -25,4 +27,5 @@ const imports = [
     ...imports,
   ],
 })
-export class SharedModule { }
+export class SharedModule {
+}

@@ -1,1 +1,9 @@
-<pre>{{ (universities | async) | json }}</pre>
+<a [routerLink]="['/']">Zacznij od nowa</a>
+
+<h1>Wybrane dla Ciebie kierunki:</h1>
+
+<div class="courses-container">
+  <app-courses-list
+    [coursesList]="courses | async"
+  ></app-courses-list>
+</div>

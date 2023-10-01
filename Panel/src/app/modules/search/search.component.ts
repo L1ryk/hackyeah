@@ -10,7 +10,7 @@ import { ResultMany } from "../../interfaces/api.interface";
   styleUrls: ['./search.component.sass']
 })
 export class SearchComponent implements OnInit, OnDestroy {
-  universities: Observable<any>
+  courses: Observable<any>
   paramsSub: Subscription
 
   constructor(
@@ -24,7 +24,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       const filters = (JSON.parse(params['data']) as Array<{ filter: string, answer: any }>)
         .map(filter => ({property: filter.filter, value: filter.answer}))
 
-      this.universities = this.api.post$<ResultMany<any>>('/api/university/courses', {filters})
+      this.courses = this.api.post$<ResultMany<any>>('/api/university/courses', {filters})
         .pipe(
           map(res => (res.items))
         )

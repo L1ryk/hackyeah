@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { Component } from '@angular/core';
+import { FormBuilder, FormControl } from "@angular/forms";
 import { QuestionInterface } from "../../../../interfaces/question.interface";
 import { AnswerInterface } from "../../../../interfaces/answer.interface";
 import { ApiService } from "../../../../services/api.service";
-import { map, Observable, of, Subscription } from "rxjs";
+import { map, Observable, of } from "rxjs";
 import { ResultMany } from "../../../../interfaces/api.interface";
 import { Router } from "@angular/router";
 
@@ -12,15 +12,21 @@ import { Router } from "@angular/router";
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.sass']
 })
-export class QuestionComponent implements OnInit, OnDestroy {
-  form: FormGroup
+export class QuestionComponent {
+  form = this.fb.group({
+    textAnswer: new FormControl<string | string[]>(''),
+    booleanAnswer: new FormControl<boolean>(true),
+  })
   answers: AnswerInterface[] = []
 
   previousNotFilterAnswer: string | boolean | undefined
   currentIndex = 0
 
   autocompleteOptions: Observable<{ id: string, name: string }[]>
-  textControlSub: Subscription
+
+  readonly searchFn = () => {
+    return true
+  }
 
   readonly questions: QuestionInterface[] = [
     {
@@ -42,6 +48,7 @@ export class QuestionComponent implements OnInit, OnDestroy {
       filter: 'tags',
       previousHasToBeTruthy: true,
       autocompleteEndpoint: '/api/tags/search',
+      multiple: true,
     },
     {
       text: 'Czy chcesz studiować niestacjonarnie/weekendowo?',
@@ -61,10 +68,16 @@ export class QuestionComponent implements OnInit, OnDestroy {
       text: 'Gdzie mieszkasz?',
       filter: 'city',
       previousHasToBeTruthy: true,
+      autocompleteEndpoint: '/api/location/search_cities'
     },
     {
-      text: 'Czy interesuje Cię odpłatne kształcenie?',
+      text: 'Jaki typ uczelni Cię interesuje?',
       filter: 'brand',
+      staticValues: [
+        'Uczelnia publiczna',
+        'Uczelnia niepubliczna',
+        'Uczelnia kościelna'
+      ],
       // isYesNoQuestion: true,
     },
     // {
@@ -81,21 +94,8 @@ export class QuestionComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  ngOnInit() {
-    this.form = this.fb.group({
-      textAnswer: new FormControl<string>(''),
-      booleanAnswer: new FormControl<boolean>(true),
-    })
-
-    this.textControlSub = this.form.controls['textAnswer'].valueChanges.subscribe(value => this.updateAutoComplete(value))
-  }
-
-  ngOnDestroy() {
-    this.textControlSub.unsubscribe()
-  }
-
   onSubmitQuestion() {
-    let answer: string | boolean
+    let answer: string | boolean | string[]
 
     const currentQuestion = this.questions[this.currentIndex]
 

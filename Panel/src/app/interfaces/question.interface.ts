@@ -4,4 +4,7 @@ export interface QuestionInterface {
   previousHasToBeTruthy?: boolean
   isYesNoQuestion?: boolean
   autocompleteEndpoint?: string
+  multiple?: boolean
+  staticValues?: string[]
+  hasNullOption?: boolean
 }

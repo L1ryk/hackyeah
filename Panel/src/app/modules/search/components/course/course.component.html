@@ -1,0 +1,16 @@
+<a
+  class="course"
+  target="_blank"
+  [href]="data.university.recruitmentLink || data.university.website"
+>
+  <h2>{{ data.course.name }}</h2>
+  <div class="uni">
+    <h3>{{ data.university.name }}</h3>
+    <span>{{ data.university.brand }}</span>
+    <span>{{ data.courseLevel.name }}</span>
+    <span>{{ data.courseForm.name }}</span>
+    <a href="data.university.website" target="_blank">{{ data.university.website }}</a>
+  </div>
+</a>
+
+<!--<pre>{{ data | json }}</pre>-->

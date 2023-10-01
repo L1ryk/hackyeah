@@ -1,26 +1,50 @@
 <div
   class="container"
   [formGroup]="form"
-  (keyup.enter)="onSubmitQuestion()"
 >
   <button mat-button color="primary" (click)="reset()">RESET</button>
   <h2>{{ questions[currentIndex].text }}</h2>
-  <mat-form-field *ngIf="!questions[currentIndex].isYesNoQuestion">
-    <mat-label>Answer</mat-label>
-    <input
-      matInput
-      formControlName="textAnswer"
-      [matAutocomplete]="auto"
+  <!--  <mat-form-field *ngIf="!questions[currentIndex].isYesNoQuestion">-->
+  <!--    <mat-label>Answer</mat-label>-->
+  <!--    <input-->
+  <!--      matInput-->
+  <!--      formControlName="textAnswer"-->
+  <!--      [matAutocomplete]="auto"-->
+  <!--    >-->
+  <!--    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">-->
+  <!--      <mat-option-->
+  <!--        *ngFor="let option of autocompleteOptions | async"-->
+  <!--        [value]="option.name"-->
+  <!--      >-->
+  <!--        {{ option.name }}-->
+  <!--      </mat-option>-->
+  <!--    </mat-autocomplete>-->
+  <!--  </mat-form-field>-->
+  <ng-select
+    *ngIf="!questions[currentIndex].isYesNoQuestion"
+    notFoundText="Nie znaleziono"
+    formControlName="textAnswer"
+    placeholder="Wpisz min.3 znaki"
+    [clearable]="false"
+    [searchable]="true"
+    [multiple]="questions[currentIndex].multiple || false"
+    [items]="(autocompleteOptions | async) || questions[currentIndex].staticValues || []"
+    [searchWhileComposing]="false"
+    [searchFn]="searchFn"
+    (search)="updateAutoComplete($event.term)"
+  >
+    <ng-template
+      ng-label-tmp
+      ng-option-tmp
+      let-item="item"
     >
-    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-      <mat-option
-        *ngFor="let option of autocompleteOptions | async"
-        [value]="option.name"
-      >
-        {{ option.name }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+      <div class="ng-select-label">
+        <div class="ng-select-option__desc">
+          <h4>{{ item.name }}</h4>
+        </div>
+      </div>
+    </ng-template>
+  </ng-select>
   <ng-container *ngIf="questions[currentIndex].isYesNoQuestion">
     <mat-radio-group
       formControlName="booleanAnswer"
