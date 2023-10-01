@@ -11,10 +11,6 @@ const routes: Routes = [
     loadChildren: () => import('src/app/modules/search/search.module').then(m => m.SearchModule),
   },
   {
-    path: 'api',
-    loadChildren: () => import('src/app/modules/test-api/test-api.module').then(m => m.TestApiModule),
-  },
-  {
     path: '**',
     redirectTo: '/',
   },

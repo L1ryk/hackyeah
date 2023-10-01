@@ -22,6 +22,7 @@ export class QuestionComponent {
   currentIndex = 0
   autocompleteOptions: Observable<SearchItemInterface[]>
 
+  // workaround for ng-select search with api data
   readonly searchFn = () => {
     return true
   }

@@ -29,11 +29,6 @@ export class ApiService {
         return
       }
 
-      // if (e === 'context' && data[e] === 'replace') {
-      //   params = params.append(e, this.userId)
-      //   return
-      // }
-
       params = params.append(e, data[e])
     })
 
@@ -68,10 +63,6 @@ export class ApiService {
     const state = new Subject<T>()
     let headers = new HttpHeaders()
     headers = headers.append('Content-Type', 'application/json')
-
-    // if (enforceJson) {
-    //   headers = headers.append('Content-Type', 'application/json')
-    // }
 
     this.http.post<ApiInterface<T>>(ApiService.uri + fn, data, {
       headers,

@@ -6,11 +6,12 @@
   <h2>{{ data.course.name }}</h2>
   <div class="uni">
     <h3>{{ data.university.name }}</h3>
-    <span>{{ data.university.brand }}</span>
-    <span>{{ data.courseLevel.name }}</span>
-    <span>{{ data.courseForm.name }}</span>
-    <a href="data.university.website" target="_blank">{{ data.university.website }}</a>
+    <div>
+      <span>{{ data.university.city.name }}</span>
+      <span>{{ data.courseLevel.name }}</span>
+      <span>{{ data.courseForm.name }}</span>
+      <span>{{ data.university.brand }}</span>
+      <a [href]="data.university.website" target="_blank">{{ data.university.website }}</a>
+    </div>
   </div>
 </a>
-
-<!--<pre>{{ data | json }}</pre>-->
