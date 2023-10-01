@@ -149,6 +149,10 @@ public static class QueryHelper
 
             query = query.Where( occAndTagExpression );
         }
+        else if ( occExpression != null )
+            query = query.Where( occExpression );
+        else if ( tagExpression != null )
+            query = query.Where( tagExpression );
 
         if ( voivodeshipFilter != null )
             query = query.Where( q => q.University.Voivodeship.Id == ( Guid )voivodeshipFilter.Value );
