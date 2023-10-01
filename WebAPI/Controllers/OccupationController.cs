@@ -41,6 +41,7 @@ public class OccupationController : ControllerBase
         await ErrorHandler.HandlerAsync( async () =>
         {
             Guard.IsNotNull( meetOccupationQuery );
+            Guard.IsNotNull( meetOccupationQuery.Part );
 
             if ( meetOccupationQuery.Part.Length < 3 )
                 return NoContent();
