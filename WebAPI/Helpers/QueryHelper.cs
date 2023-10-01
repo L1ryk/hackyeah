@@ -81,15 +81,15 @@ public static class QueryHelper
             .Include( uc => uc.CourseLevel )
             .AsQueryable();
 
-        var isStationaryFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "IsStationary" ) );
+        var isStationaryFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "isstationary" ) );
 
-        var occupationFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "Occupation" ) );
+        var occupationFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "occupation" ) );
 
-        var tagsFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "Tags" ) );
+        var tagsFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "tags" ) );
 
-        var voivodeshipFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "Voivodeship" ) );
+        var voivodeshipFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "voivodeship" ) );
 
-        var cityFilter = getCourses.Filters.FirstOrDefault( f => f.Property.Equals( "City" ) );
+        var cityFilter = getCourses.Filters.FirstOrDefault( f => f.Property.ToLower().Equals( "city" ) );
 
         if ( isStationaryFilter != null )
         {
@@ -102,8 +102,11 @@ public static class QueryHelper
 
         if ( occupationFilter != null )
         {
+            var filter = ( occupationFilter.Value.ToString() ?? String.Empty ).ToLower();
+
             var occupations = await dbContext.CourseOccupations
-                .Where( o => o.Course.Name.Equals( occupationFilter.Value.ToString() ) ).ToListAsync();
+                .Include( co => co.Course )
+                .Where( o => o.Occupation.Name.ToLower().Equals( filter ) ).ToListAsync();
 
             query = query.Where( q => occupations.Select( o => o.Course.Id ).Contains( q.Course.Id ) );
         }
@@ -114,8 +117,8 @@ public static class QueryHelper
         if ( voivodeshipFilter != null )
             query = query.Where( q => q.University.Voivodeship.Id == ( Guid ) voivodeshipFilter.Value );
 
-        if ( cityFilter != null )
-            query = query.Where( q => q.University.City.Id == ( Guid ) cityFilter.Value );
+        if ( cityFilter != null && Guid.TryParse( cityFilter.Value.ToString(), out Guid guid ))
+            query = query.Where( q => q.University.City.Id == guid );
 
         return await query.GetPaginatedQuery( getCourses, dbContext );
     }
