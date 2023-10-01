@@ -74,6 +74,7 @@ public static class QueryHelper
     public static async Task<PaginationQuery<UniversityCourse>> PrepareCourseQueryAsync( GetCourses getCourses, ApiDbContext dbContext )
     {
         var query = dbContext.UniversityCourses
+            .Include( uc => uc.Course )
             .Include( uc => uc.Course ).ThenInclude( c => c.Tags )
             .Include( uc => uc.CourseForm )
             .Include( uc => uc.CourseLevel )
