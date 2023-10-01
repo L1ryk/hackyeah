@@ -29,7 +29,7 @@ public class TagAccessor : ITagAccessor
 
     public async Task<MeetTagsResponse> GetMeetTags( MeetTagQuery meetTagQuery )
     {
-        var tagsQuery = _dbContext.Tags.Where( t => t.Name.ToLower().StartsWith( meetTagQuery.Part ) );
+        var tagsQuery = _dbContext.Tags.Where( t => t.Name.ToLower().StartsWith( meetTagQuery.Part.ToLower() ) );
 
         var res = await tagsQuery.GetPaginatedQuery( meetTagQuery, _dbContext );
 
