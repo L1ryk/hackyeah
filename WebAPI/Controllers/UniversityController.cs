@@ -47,25 +47,6 @@ public class UniversityController : ControllerBase
                 } );
             } );
 
-    [ HttpPost( "universities" ) ]
-    public async Task<ActionResult> Get( [ FromBody ] GetUniversities getUniversities ) => await
-        ErrorHandler.HandlerAsync(
-            async () =>
-            {
-                Guard.IsNotNull( getUniversities );
-
-                var universities = await _universityAccessor.GetUniversitiesAsync( getUniversities );
-
-                return Ok( new Response<PaginatedResult<SimplifiedUniversityDto>>
-                {
-                    IsSuccess = true,
-                    Result = new PaginatedResult<SimplifiedUniversityDto>
-                    {
-                        Items = universities.Items, ItemCount = universities.ItemCount
-                    }
-                } );
-            } );
-
     [ HttpGet( "courses" ) ]
     public async Task<ActionResult> GetCourses( [ FromQuery ] Pagination pagination ) =>
         await ErrorHandler.HandlerAsync(
