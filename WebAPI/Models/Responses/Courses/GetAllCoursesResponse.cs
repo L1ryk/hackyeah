@@ -3,6 +3,6 @@ using WebAPI.Models.Paginations;
 
 namespace WebAPI.Models.Responses.Courses;
 
-public class GetAllCoursesResponse : PaginatedResult<Course>
+public class GetAllCoursesResponse : PaginatedResult<UniversityCourse>
 {
 }

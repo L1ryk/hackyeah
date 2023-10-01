@@ -71,7 +71,7 @@ public static class QueryHelper
         return await query.GetPaginatedQuery( getUniversityCourses, dbContext );
     }
 
-    public static async Task<PaginationQuery<Course>> PrepareCourseQueryAsync( GetCourses getCourses, ApiDbContext dbContext )
+    public static async Task<PaginationQuery<UniversityCourse>> PrepareCourseQueryAsync( GetCourses getCourses, ApiDbContext dbContext )
     {
         var query = dbContext.UniversityCourses
             .Include( uc => uc.Course ).ThenInclude( c => c.Tags )
@@ -104,6 +104,6 @@ public static class QueryHelper
         if ( tagsFilter is { Value: List< Guid > tags } )
             query = query.Where( uc => uc.Course.Tags.Any( t => tags.Contains( t.Tag.Id ) ) );
 
-        return await query.Select( q => q.Course ).GetPaginatedQuery( getCourses, dbContext );
+        return await query.GetPaginatedQuery( getCourses, dbContext );
     }
 }

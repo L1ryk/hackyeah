@@ -20,7 +20,7 @@ public class CourseAccessor : ICourseAccessor
 
     public async Task<GetAllCoursesResponse> GetAllCoursesAsync( Pagination pagination )
     {
-        var result = await QueryHelper.GetPaginatedQuery<Course>( pagination, _dbContext );
+        var result = await QueryHelper.GetPaginatedQuery<UniversityCourse>( pagination, _dbContext );
 
         return new GetAllCoursesResponse { Items = result.Result, ItemCount = result.ItemsCount };
     }
