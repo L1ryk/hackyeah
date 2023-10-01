@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using WebAPI.DataSource;
 using WebAPI.DataSource.Entities;
 using WebAPI.DataSource.Entities.Univerisites;
@@ -100,13 +101,9 @@ public static class QueryHelper
             query = query.Where( q => occupations.Select( o => o.Course.Id ).Contains( q.Course.Id ) );
         }
 
-        if ( tagsFilter != null )
-        {
-            var tags = tagsFilter.Value as List<Guid>;
+        if ( tagsFilter is { Value: List< Guid > tags } )
+            query = query.Where( uc => uc.Course.Tags.Any( t => tags.Contains( t.Tag.Id ) ) );
 
-            query = query.Where( q => tags.Contains( q.Course.Tags.Select( t => t.Tag.Id ) ) )
-        }
-
-        return await query.GetPaginatedQuery( getCourses, dbContext );
+        return await query.Select( q => q.Course ).GetPaginatedQuery( getCourses, dbContext );
     }
 }
