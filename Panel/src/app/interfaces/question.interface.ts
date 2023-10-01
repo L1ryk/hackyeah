@@ -3,4 +3,5 @@ export interface QuestionInterface {
   filter?: string
   previousHasToBeTruthy?: boolean
   isYesNoQuestion?: boolean
+  autocompleteEndpoint?: string
 }

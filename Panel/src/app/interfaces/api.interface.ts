@@ -3,3 +3,8 @@ export interface ApiInterface<T = Object> {
   isSuccess: boolean
   error: string
 }
+
+export interface ResultMany<T> {
+  itemsCount: number
+  items: T[]
+}

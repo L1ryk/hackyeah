@@ -3,13 +3,23 @@
   [formGroup]="form"
   (keyup.enter)="onSubmitQuestion()"
 >
+  <button mat-button color="primary" (click)="reset()">RESET</button>
   <h2>{{ questions[currentIndex].text }}</h2>
   <mat-form-field *ngIf="!questions[currentIndex].isYesNoQuestion">
     <mat-label>Answer</mat-label>
     <input
       matInput
       formControlName="textAnswer"
+      [matAutocomplete]="auto"
     >
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of autocompleteOptions | async"
+        [value]="option.name"
+      >
+        {{ option.name }}
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field>
   <ng-container *ngIf="questions[currentIndex].isYesNoQuestion">
     <mat-radio-group
