@@ -58,6 +58,25 @@ public class LocationController : Controller
                 } );
             } );
 
+    [ HttpPost( "search_cities" ) ]
+    public async Task<ActionResult> Get( [ FromBody ] SearchCities searchCities ) =>
+        await ErrorHandler.HandlerAsync(
+            async () =>
+            {
+                Guard.IsNotNull( searchCities );
+
+                if ( searchCities.Part.Length < 3 )
+                    return NoContent();
+
+                var cities = await _cityAccessor.SearchCitiesAsync( searchCities );
+
+                return Ok( new Response<PaginatedResult<City>>
+                {
+                    IsSuccess = true,
+                    Result = new PaginatedResult<City> { Items = cities.Items, ItemCount = cities.ItemCount }
+                } );
+            } );
+
     [ HttpGet( "voivodeships" ) ]
     public async Task<ActionResult> GetVoivodeships( [ FromQuery ] Pagination pagination ) =>
         await ErrorHandler.HandlerAsync(
